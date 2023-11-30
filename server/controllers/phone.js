@@ -121,3 +121,5 @@ const getFilterProduct = asyncHandler(async (req, res) => {
 		products,
 	});
 });
+
+module.exports = { getAllPhone, getFilterProduct, getOnePhone, createPhone, updatePhone, deletePhone };
