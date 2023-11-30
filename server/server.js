@@ -1,25 +1,31 @@
-const express = require('express');
-const cors = require('cors');
+const express = require("express");
+require("dotenv").config();
+const cors = require("cors");
+const connect = require("./config/connect");
 const app = express();
 const port = process.env.PORT || 8000;
 
 // Middlewares
 app.use(express.json());
 app.use(
-  express.urlencoded({
-    extended: true,
-  })
+	express.urlencoded({
+		extended: true,
+	})
 );
 app.use(cors());
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+app.get("/", (req, res) => {
+	res.send("Hello World!");
 });
 
-try {
-  app.listen(port, () => {
-    console.log(`Listening on http://localhost:${port}/`);
-  });
-} catch (error) {
-  console.log(error);
-}
+const start = async () => {
+	try {
+		await connect(process.env.MONGO_URL);
+		console.log("Connected to mongodb");
+		app.listen(port, () => {
+			console.log(`Listening on http://localhost:${port}/`);
+		});
+	} catch (error) {
+		console.log(error);
+	}
+};
