@@ -7,6 +7,7 @@ const errorHandler = require("./middlewares/error-handler");
 const app = express();
 const port = process.env.PORT || 8000;
 
+const mainRouter = require("./routes");
 // Middlewares
 app.use(express.json());
 app.use(
@@ -19,6 +20,8 @@ app.use(cors());
 app.get("/", (req, res) => {
 	res.send("Hello World!");
 });
+
+app.use("/api/v1", mainRouter);
 
 app.use(notFound);
 app.use(errorHandler);
