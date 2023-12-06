@@ -7,7 +7,6 @@ const phoneSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 			index: true,
-			unique: true,
 		},
 		brand: {
 			type: String,

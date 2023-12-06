@@ -2,7 +2,7 @@ const mongoose = require("mongoose"); // Erase if already required
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 // Declare the Schema of the Mongo model
-const userInformation = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
 	name: {
 		type: String,
 		required: true,

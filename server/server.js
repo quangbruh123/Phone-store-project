@@ -4,22 +4,23 @@ const cors = require("cors");
 const connect = require("./config/connect");
 const notFound = require("./middlewares/not-found");
 const errorHandler = require("./middlewares/error-handler");
+
 const app = express();
 const port = process.env.PORT || 8000;
 
 const mainRouter = require("./routes");
 // Middlewares
+app.use(
+	cors({
+		credentials: true,
+	})
+);
 app.use(express.json());
 app.use(
 	express.urlencoded({
 		extended: true,
 	})
 );
-app.use(cors());
-
-app.get("/", (req, res) => {
-	res.send("Hello World!");
-});
 
 app.use("/api/v1", mainRouter);
 
