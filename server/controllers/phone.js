@@ -49,7 +49,7 @@ const updatePhone = asyncHandler(async (req, res) => {
 const deletePhone = asyncHandler(async (req, res) => {
 	const { pid } = req.params;
 
-	const deletedProduct = await Product.findByIdAndDelete(pid);
+	const deletedProduct = await Phone.findByIdAndDelete(pid);
 
 	if (!deletedProduct) {
 		throw new NotFoundError("No product with that pid to delete");
@@ -92,7 +92,7 @@ const getFilterProduct = asyncHandler(async (req, res) => {
 		});
 	}
 
-	let result = Product.find(queryObject);
+	let result = Phone.find(queryObject);
 
 	// sort (có trừ đằng trước là từ lớn tới bé, k trừ thì từ bé đến lớn) sort=abc,-def
 	if (sort) {
@@ -110,13 +110,13 @@ const getFilterProduct = asyncHandler(async (req, res) => {
 
 	// phân chia trang
 	const page = Number(req.query.page) || 1;
-	const limit = Number(req.query.limit) || 2;
+	const limit = Number(req.query.limit) || 10;
 	const skip = (page - 1) * limit; // thí dụ mình muốn xem page thứ 2 tức là sản phẩm thứ 10 đến thứ 19 thì mình phải đếm skip tới số 10 bằng cách lấy page - 1 * limit
 
 	result = result.skip(skip).limit(limit);
 
 	const products = await result;
-	return res.status(StatusCodes.OK).json({
+	return res.status(200).json({
 		count: products.length,
 		products,
 	});

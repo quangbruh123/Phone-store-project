@@ -70,7 +70,7 @@ const updateUser = asyncHandler(async (req, res) => {
 	});
 });
 
-const getCurrentUser = asyncHandler(async (req, res) => {
+const getCurrentUser = asyncHandler(async (req, res, next) => {
 	const { _id } = req.user;
 
 	if (!_id) {
@@ -82,10 +82,9 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 		throw new NotFoundError(`No user with id: ${id}`);
 	}
 
-	return res.status(200).json({
-		success: true,
-		currentUser,
-	});
+	res.locals.statusCode = 200;
+	res.locals.currentUser = currentUser;
+	next();
 });
 
 module.exports = { getAllUser, getOneUser, getCurrentUser, updateUser, deleteUser };

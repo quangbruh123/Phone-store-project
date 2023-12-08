@@ -9,6 +9,7 @@ const app = express();
 const port = process.env.PORT || 8000;
 
 const mainRouter = require("./routes");
+const handlingResponse = require("./middlewares/handlingResponse");
 // Middlewares
 app.use(
 	cors({
@@ -23,6 +24,7 @@ app.use(
 );
 
 app.use("/api/v1", mainRouter);
+app.use(handlingResponse);
 
 app.use(notFound);
 app.use(errorHandler);
@@ -32,7 +34,7 @@ const start = async () => {
 		await connect(process.env.MONGO_URL);
 		console.log("Connected to mongodb");
 		app.listen(port, () => {
-			console.log(`Listening on http://localhost:${port}/`);
+			console.log(`Listening on http://localhost:${port}`);
 		});
 	} catch (error) {
 		console.log(error);

@@ -14,11 +14,6 @@ const userSchema = new mongoose.Schema({
 		required: true,
 		unique: true,
 	},
-	username: {
-		type: String,
-		required: true,
-		unique: true,
-	},
 	phoneNumber: {
 		type: String,
 		required: true,
@@ -30,6 +25,10 @@ const userSchema = new mongoose.Schema({
 			},
 			message: "Số điện thoại phải có 10 chữ số",
 		},
+	},
+	password: {
+		type: String,
+		required: true,
 	},
 	refreshToken: {
 		type: String,
@@ -44,7 +43,7 @@ const userSchema = new mongoose.Schema({
 
 userSchema.pre("save", async function (next) {
 	if (this.isModified("password")) {
-		const salt = bcrypt.genSalt(10);
+		const salt = await bcrypt.genSalt(10);
 		this.password = await bcrypt.hash(this.password, salt);
 	}
 	next();
