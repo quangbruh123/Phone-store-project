@@ -59,7 +59,7 @@ const ProductListing = () => {
                     <img src={bannerImg} alt='bannerImg' className='rounded-md h-full min-h-[10rem] object-cover' />
                 </header>
                 <section className='py-3 flex flex-col md:flex-row gap-2 justify-between'>
-                    <h1 className='text-2xl font-bold'>Glasses for You!</h1>
+                    <h1 className='text-2xl font-bold'>Danh sách sản phẩm</h1>
                     <div className='flex items-center gap-2'>
                         <Filters isFilterOpen={isFilterOpen} setIsFilterOpen={setIsFilterOpen} />
                         <SortBy />
@@ -70,7 +70,7 @@ const ProductListing = () => {
                             onClick={() => setIsFilterOpen(!isFilterOpen)}
                         >
                             <BiFilter className='text-lg' />
-                            <span className='text-sm'>Filters</span>
+                            <span className='text-sm'>Bộ lọc</span>
                         </button>
                     </div>
                 </section>
@@ -82,7 +82,7 @@ const ProductListing = () => {
                         ))}
                     </main>
                 ) : ( */}
-                <p className='font-sans text-4xl  font-bold uppercase  tracking-wide text-gray-300 text-center w-full py-32'>Nothing to Show!</p>
+                <p className='font-sans text-4xl  font-bold uppercase  tracking-wide text-gray-300 text-center w-full py-32'>Không có sản phẩm!</p>
                 {/* )} */}
                 <button
                     className={` fixed bottom-10 bg-gray-800 right-2 p-2 rounded-full text-xl shadow-2xl transition-all delay-100 ease-in-out ${

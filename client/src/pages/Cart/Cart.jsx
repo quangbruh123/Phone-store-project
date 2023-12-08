@@ -24,12 +24,12 @@ const Cart = () => {
             <div className='h-[60vh] w-full flex flex-col items-center justify-center  gap-3 '>
                 <img src={emptyBag} alt='empty bag' className='h-36 -rotate-12 mt-5 drop-shadow-lg' />
                 <div className='text-center'>
-                    <h2 className='text-2xl font-bold'>Hey, it feels so light!</h2>
-                    <p className='text-sm text-gray-400'>There's nothing in your bag. Let's add some items.</p>
+                    <h2 className='text-2xl font-bold'>Mua đê !!!!!!</h2>
+                    <p className='text-sm text-gray-400'>Bạn chưa chọn món nào. Cùng thêm một vài sản phẩm nhé!!</p>
                 </div>
 
                 <button className='btn-rounded-secondary text-sm mt-5' onClick={() => navigate("/products")}>
-                    Explore
+                    Khám phá ngay
                 </button>
             </div>
             {/* )} */}

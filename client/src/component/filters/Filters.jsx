@@ -21,29 +21,21 @@ const Filters = ({ isFilterOpen, setIsFilterOpen }) => {
     `}
         >
             <div className='flex items-center justify-between'>
-                <h1 className='text-3xl font-bold'>Filter Products</h1>
+                <h1 className='text-3xl font-bold'>Lọc sản phẩm</h1>
                 <AiOutlineClose className='text-xl cursor-pointer' onClick={() => setIsFilterOpen(!isFilterOpen)} />
             </div>
             <button
                 className='py-0.5 px-2 w-16 text-center bg-black/[0.2]  text-sm font-semibold shadow-sm rounded-md hover:bg-gray-800 hover:text-white transition-colors '
                 // onClick={clearFilters}
             >
-                Clear
+                Đặt lại
             </button>
             <section className='py-3'>
-                <FilterHeading text='Gender' />
-                <div className='grid grid-rows-2 grid-cols-2 gap-2'>
-                    {/* {gendersList.map((data, index) => (
-                        <InputRadioType2 data={data} key={index} />
-                    ))} */}
-                </div>
-            </section>
-            <section className='py-3'>
-                <FilterHeading text='Price Range' />
+                <FilterHeading text='Tầm giá' />
                 <InputRange />
             </section>
             <section className='py-3'>
-                <FilterHeading text='Categories' />
+                <FilterHeading text='Danh mục' />
                 <div className='flex flex-col gap-2'>
                     {/* {checkboxCategories.map((data, index) => (
                         <Checkbox data={data} key={index} />
@@ -52,7 +44,7 @@ const Filters = ({ isFilterOpen, setIsFilterOpen }) => {
             </section>
 
             <section className='py-3 flex flex-col gap-2'>
-                <FilterHeading text='Rating' />
+                <FilterHeading text='Đánh giá' />
                 {/* {ratings.map((data, index) => (
                     <InputRadio data={data} key={index} name='rating' />
                 ))} */}

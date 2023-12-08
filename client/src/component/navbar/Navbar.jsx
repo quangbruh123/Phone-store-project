@@ -61,7 +61,7 @@ const Navbar = () => {
 
                 <section className='flex items-center'>
                     <Link to='/products' className='mx-2 px-3 py-1 shadow-sm rounded-md text-white bg-yellow-700 text-sm hover:bg-yellow-800 transition'>
-                        <span className='hidden xs:block'>Explore</span> <MdOutlineExplore className='xs:hidden' />
+                        <span className='hidden xs:block'>Khám phá</span> <MdOutlineExplore className='xs:hidden' />
                     </Link>
                     <ul className=' hidden md:flex justify-between text-2xl ps-1'>
                         <li
