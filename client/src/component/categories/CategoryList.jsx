@@ -6,7 +6,7 @@ const CategoryList = ({ catRef }) => {
     const categoryList = [
         {
             _id: 1,
-            categoryName: "Phone",
+            categoryName: "Điện thoại",
             categoryImg: "https://www.trustedreviews.com/wp-content/uploads/sites/54/2019/04/SamsungGalaxyS10float-2-2-1920x1280-920x613.jpeg",
         },
         {
@@ -16,7 +16,7 @@ const CategoryList = ({ catRef }) => {
         },
         {
             _id: 3,
-            categoryName: "Accesories",
+            categoryName: "Phụ kiện",
             categoryImg: "https://th.bing.com/th/id/R.f66599ee3504083702ba82049ac3afb4?rik=KJCLh9E5KsiaOw&pid=ImgRaw&r=0",
         },
     ];
