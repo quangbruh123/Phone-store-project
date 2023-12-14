@@ -1,30 +1,23 @@
-const User = require("../models");
+const CustomAPIError = require("../error/customError");
+const User = require("../models/user");
 const asyncHandler = require("express-async-handler");
 
 const register = asyncHandler(async (req, res) => {
-	const { firstName, lastName, email, password } = req.body;
-
-	if (!firstName || !lastName || !email || !password) {
-		throw new BadRequestError("Please provide full required fill");
-	}
-
 	const newUser = await User.create(req.body);
 	return res.status(201).json(newUser);
 });
 
 const login = asyncHandler(async (req, res) => {
-	const { email, pass } = req.body;
-	if (!email || !pass) {
-		throw new BadRequestError("Please provide email and password");
-	}
+	const { email, password: pass } = req.body;
+
 	const user = await User.findOne({ email });
 
 	if (!user) {
-		throw new NotFoundError(`Dont have this user with email ${email}`);
+		throw new CustomAPIError(`Dont have this user with email ${email}`, 400);
 	}
 
 	if (!user.validatePassword(pass)) {
-		throw new NotFoundError(`Password is not correct`);
+		throw new CustomAPIError(`Password is not correct`, 400);
 	}
 
 	const accessToken = user.createJWT(process.env.ACCESS_TOKEN_LT);
@@ -39,9 +32,9 @@ const login = asyncHandler(async (req, res) => {
 		maxAge: 3 * 1000 * 60 * 60 * 24,
 	});
 
-	const { password, role, refreshToken: userToken, ...userData } = user.toObject();
+	const { password, role, ...userData } = user.toObject();
 
-	res.status(StatusCodes.OK).json({
+	return res.status(200).json({
 		accessToken,
 		refreshToken,
 		userData,
@@ -72,7 +65,7 @@ const renewAccessToken = asyncHandler(async (req, res) => {
 	const user = await User.findOne(req.user);
 
 	if (!user) {
-		throw new Error("Refresh token does not match with user, but when sign we sign id. PLEASE CHECK");
+		throw new CustomAPIError("Refresh token does not match with user, but when sign we sign id. PLEASE CHECK", 400);
 	}
 
 	const newAccessToken = user.createJWT(process.env.ACCESS_TOKEN_LT);
@@ -85,13 +78,13 @@ const renewAccessToken = asyncHandler(async (req, res) => {
 const forgotPassword = asyncHandler(async (req, res) => {
 	const { email } = req.query;
 	if (!email) {
-		throw new BadRequestError("Missing Email");
+		throw new CustomAPIError("Missing Email", 400);
 	}
 
 	const user = await User.findOne({ email });
 
 	if (!user) {
-		throw new BadRequestError("No user has registered with this email");
+		throw new CustomAPIError("No user has registered with this email", 400);
 	}
 
 	const resetToken = await user.createPasswordResetToken();
@@ -111,7 +104,7 @@ const checkResetToken = asyncHandler(async (req, res) => {
 	const { resetToken, email, password } = req.body;
 
 	if (!resetToken || !email || !password) {
-		throw new BadRequestError("Please provide full reset token, email, password");
+		throw new CustomAPIError("Please provide full reset token, email, password", 400);
 	}
 
 	const user = await User.findOne({
@@ -120,7 +113,7 @@ const checkResetToken = asyncHandler(async (req, res) => {
 		passwordResetExpired: { $gt: Date.now() },
 	});
 	if (!user) {
-		throw new BadRequestError("Invalid reset token");
+		throw new CustomAPIError("Invalid reset token", 400);
 	}
 
 	user.password = password;
