@@ -122,4 +122,54 @@ const getFilterProduct = asyncHandler(async (req, res) => {
 	});
 });
 
-module.exports = { getAllPhone, getFilterProduct, getOnePhone, createPhone, updatePhone, deletePhone };
+const rate = asyncHandler(async (req, res) => {
+	const { uid } = req.user;
+	const { star, comment, pid } = req.body; // star với pid là bắt buộc, comment có hay không cũng đc
+
+	if (!star || !pid) {
+		throw new BadRequestError("Missing số sao & pid");
+	}
+
+	const product = await Product.findById(pid);
+
+	const review = product.ratings.find((rating) => {
+		return rating.postedBy.toString() === _id;
+	}); // kiểm tra xem cái sản phẩm đó với user đó thì thằng đó đã đánh giá cho sản phẩm đó chưa
+
+	let updateReview;
+	if (review) {
+		// update star & comment
+		await Product.updateOne(
+			{
+				$and: [{ _id: pid }, { ratings: { $elemMatch: review } }],
+			},
+			{
+				$set: {
+					"ratings.$.star": star,
+					"ratings.$.comment": comment, // $ và $elemMatch đại diện cho phần tử đầu tiên tìm thấy từ $elemMatch
+				},
+			},
+			{ new: true }
+		);
+		updateReview = await Product.findById(pid);
+	} else {
+		// create star & comment
+		updateReview = await Product.findByIdAndUpdate(
+			pid,
+			{
+				$push: { ratings: { star, comment, postedBy: _id } },
+			},
+			{ new: true, runValidators: true }
+		);
+	}
+
+	const avgRating = (updateReview.ratings.reduce((prev, current) => prev + current.star, 0) / updateReview.ratings.length).toFixed(1);
+	const totalRating = updateReview.ratings.length;
+	updateReview.avgRating = avgRating;
+	updateReview.totalRating = totalRating;
+	await updateReview.save();
+
+	return res.status(204).send();
+});
+
+module.exports = { getAllPhone, getFilterProduct, getOnePhone, createPhone, updatePhone, deletePhone, rate };

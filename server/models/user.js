@@ -40,6 +40,23 @@ const userSchema = new mongoose.Schema({
 	resetTokenExpried: {
 		type: Date,
 	},
+	role: {
+		type: String,
+		default: "user",
+		enum: ["user", "admin"],
+	},
+	cart: [
+		{
+			product: { type: mongoose.Types.ObjectId, ref: "Product" },
+			quantity: Number,
+		},
+	],
+	wishlist: [
+		{
+			type: mongoose.Types.ObjectId,
+			ref: "Product",
+		},
+	],
 });
 
 userSchema.pre("save", async function (next) {

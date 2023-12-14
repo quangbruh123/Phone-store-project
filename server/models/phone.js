@@ -26,7 +26,7 @@ const phoneSchema = new mongoose.Schema(
 				type: String,
 			},
 		],
-		imageLink: [
+		imageLinks: [
 			{
 				type: String,
 			},
@@ -39,6 +39,29 @@ const phoneSchema = new mongoose.Schema(
 			type: Map,
 			of: String,
 			required: true,
+		},
+		avgRating: {
+			type: Number,
+			default: 0,
+		},
+		totalRating: {
+			type: Number,
+			default: 0,
+		},
+		ratings: [
+			{
+				star: { type: Number },
+				postedBy: { type: mongoose.Types.ObjectId, ref: "User" },
+				comment: String,
+			},
+		],
+		quantity: {
+			type: Number,
+			default: 0,
+		},
+		soldQuantity: {
+			type: Number,
+			default: 0,
 		},
 	},
 	{ timestamps: true }
