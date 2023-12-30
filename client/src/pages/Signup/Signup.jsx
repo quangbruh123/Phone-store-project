@@ -10,7 +10,6 @@ import { useEffect, useState } from "react";
 const Signup = () => {
     const navigate = useNavigate();
     const [userDetails, setUserDetails] = useState({
-        username: "",
         email: "",
         password: "",
         phoneNumber: "",
@@ -74,16 +73,6 @@ const Signup = () => {
                                     className='border rounded-md p-1.5 shadow-sm'
                                     value={userDetails.phoneNumber}
                                     onChange={(e) => setUserDetails({ ...userDetails, phoneNumber: e.target.value })}
-                                />
-                            </label>
-                            <label className='flex flex-col'>
-                                <input
-                                    type='text'
-                                    required
-                                    placeholder='Username'
-                                    className='border rounded-md p-1.5 shadow-sm'
-                                    value={userDetails.username}
-                                    onChange={(e) => setUserDetails({ ...userDetails, username: e.target.value })}
                                 />
                             </label>
                             <label className='flex flex-col'>
@@ -156,7 +145,6 @@ const Signup = () => {
                                             : "btn-primary w-2/3 text-lg bg-green-500 flex gap-2 justify-center"
                                     }
                                     disabled={
-                                        !userDetails.username ||
                                         !userDetails.email ||
                                         !userDetails.password ||
                                         !confirmPassword ||
