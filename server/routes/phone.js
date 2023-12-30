@@ -1,10 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const { getAllPhone, getFilterProduct, getOnePhone, createPhone, updatePhone, deletePhone } = require("../controllers/phone");
-const { verifyToken, checkingAdmin } = require("../middlewares/verifyToken");
+const { verifyAccessToken, checkIsStaffOrAdmin } = require("../middlewares/verifyToken");
 
-router.route("/").get(verifyToken, checkingAdmin, getAllPhone).post(createPhone);
+router.route("/").get(verifyAccessToken, checkIsStaffOrAdmin, getAllPhone).post(createPhone);
 router.route("/filter").get(getFilterProduct);
-router.route("/:pid").get(verifyToken, getOnePhone).put(verifyToken, checkingAdmin, updatePhone).delete(verifyToken, checkingAdmin, deletePhone);
+router
+	.route("/:pid")
+	.get(verifyAccessToken, getOnePhone)
+	.put(verifyAccessToken, checkIsStaffOrAdmin, updatePhone)
+	.delete(verifyAccessToken, checkIsStaffOrAdmin, deletePhone);
 
 module.exports = router;
