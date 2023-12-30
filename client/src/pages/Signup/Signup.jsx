@@ -27,17 +27,23 @@ const Signup = () => {
     const [signUpSuccessful, setSignUpSuccessful] = useState(false);
 
     const handleSubmit = async (e) => {
+        console.log(userDetails);
         e.preventDefault();
+        setSigningUp(true);
         if (userDetails.password != confirmPassword) {
         } else {
             const response = await signUp(userDetails).then((data) => {
-                console.log(data);
+                if (data.status && data.status == 201) {
+                    console.log(data);
+                    setSignUpSuccessful(true);
+                    setInterval(() => navigate("/login"), 1500);
+                } else {
+                    window.alert(data.response.data.msg);
+                    setSigningUp(false);
+                }
             });
         }
     };
-
-    const isDisabled =
-        signingUp || !userDetails.username || !userDetails.email || !userDetails.password || !confirmPassword || userDetails.name || userDetails.phoneNumber;
     return (
         <main className='grid  grid-rows-1 md:grid-cols-2 w-full  h-screen m-auto '>
             <section className=' hidden md:block max-h-screen  rounded-lg'>
@@ -138,11 +144,28 @@ const Signup = () => {
                                             : "invisible"
                                     }`}
                                 >
-                                    Password Mismatch
+                                    Mật khẩu không trùng
                                 </p>
                             </label>
                             <div className='w-full py-2 flex flex-col gap-4 items-center'>
-                                <button type='submit' className='btn-primary w-2/3 text-lg text-center' disabled={isDisabled}>
+                                <button
+                                    type='submit'
+                                    className={
+                                        !signUpSuccessful
+                                            ? "btn-primary w-2/3 text-lg text-center bg-black"
+                                            : "btn-primary w-2/3 text-lg bg-green-500 flex gap-2 justify-center"
+                                    }
+                                    disabled={
+                                        !userDetails.username ||
+                                        !userDetails.email ||
+                                        !userDetails.password ||
+                                        !confirmPassword ||
+                                        !userDetails.name ||
+                                        !userDetails.phoneNumber ||
+                                        signingUp
+                                    }
+                                >
+                                    {signUpSuccessful && <AiOutlineCheck className='mt-1'></AiOutlineCheck>}
                                     {signingUp ? (!signUpSuccessful ? "Đang xử lý..." : "Đăng ký thành công") : "Tạo tài khoản"}
                                 </button>
                                 <p className='text-gray-600 text-sm'>
