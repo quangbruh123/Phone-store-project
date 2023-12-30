@@ -24,7 +24,6 @@ app.use(
 );
 
 app.use("/api/v1", mainRouter);
-app.use(handlingResponse);
 
 app.use(notFound);
 app.use(errorHandler);

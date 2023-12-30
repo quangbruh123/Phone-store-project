@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import axiosInstance from "../api/axiosConfig";
 
-const useFetchData = (url, query, dataType = "none") => {
-    const [data, setData] = useState(dataType === "object" ? {} : []);
+const useFetchDataForObject = (url, query) => {
+    const [data, setData] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -12,7 +11,6 @@ const useFetchData = (url, query, dataType = "none") => {
             try {
                 const response = await axiosInstance.get(url, {
                     params: query,
-                    withCredentials: true,
                 });
                 setData(response.data);
             } catch (error) {
@@ -28,4 +26,4 @@ const useFetchData = (url, query, dataType = "none") => {
     return { data, isLoading, error };
 };
 
-export default useFetchData;
+export default useFetchDataForObject;
