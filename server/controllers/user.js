@@ -2,7 +2,38 @@ const User = require("../models/user");
 const asyncHandler = require("express-async-handler");
 
 const getAllUser = asyncHandler(async (req, res) => {
-	const users = await User.find();
+	const queryObject = {};
+
+	const { name } = req.query;
+
+	// tìm các trường đơn giản cụ thể như là tìm tên, tìm hãng
+	if (name) {
+		queryObject["$or"] = [{ name: { $regex: name, $options: "i" } }, { email: { $regex: email, $options: "i" } }];
+	}
+
+	let result = User.find(queryObject);
+
+	// sort (có trừ đằng trước là từ lớn tới bé, k trừ thì từ bé đến lớn) sort=abc,-def
+	if (sort) {
+		const sortList = sort.split(",").join(" ");
+		result = result.sort(sortList);
+	} else {
+		result = result.sort("-createdAt");
+	}
+
+	// field limit (chọn trường để hiển thị)
+	if (field) {
+		const fieldSelect = field.split(",").join(" ");
+		result = result.select(fieldSelect);
+	}
+
+	// phân chia trang
+	const page = Number(req.query.page) || 1;
+	const limit = Number(req.query.limit) || 10;
+	const skip = (page - 1) * limit; // thí dụ mình muốn xem page thứ 2 tức là sản phẩm thứ 10 đến thứ 19 thì mình phải đếm skip tới số 10 bằng cách lấy page - 1 * limit
+
+	result = result.skip(skip).limit(limit);
+	const users = await result;
 	return res.status(200).json(users);
 });
 

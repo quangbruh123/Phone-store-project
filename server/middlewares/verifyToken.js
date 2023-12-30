@@ -35,4 +35,22 @@ const verifyRefreshToken = async (req, res, next) => {
 	}
 };
 
-module.exports = { verifyAccessToken, verifyRefreshToken };
+const checkRole = (allowedRoles) => async (req, res, next) => {
+	try {
+		const { roleId } = req.user;
+
+		if (!allowedRoles.includes(roleId)) {
+			throw new CustomAPIError("Không đúng role cần vào", 401);
+		}
+		next();
+	} catch (error) {
+		next(error);
+	}
+};
+
+const checkIsAdmin = checkRole(["admin"]);
+const checkIsStaff = checkRole(["staff"]);
+const checkIsUser = checkRole(["user"]);
+const checkIsStaffOrAdmin = checkRole(["admin", "staff"]);
+
+module.exports = { verifyAccessToken, verifyRefreshToken, checkIsUser, checkIsStaff, checkIsStaffOrAdmin };

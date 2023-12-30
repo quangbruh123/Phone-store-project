@@ -8,17 +8,20 @@ const {
   updatePhone,
   deletePhone,
 } = require('../controllers/phone');
-const { verifyToken, checkingAdmin } = require('../middlewares/verifyToken');
+const {
+  verifyAccessToken,
+  checkIsStaffOrAdmin,
+} = require('../middlewares/verifyToken');
 
-// getAllPhone: verifyToken, checkingAdmin
-router.route('/').get(getAllPhone).post(createPhone);
-
-//getFilterProduct
+router
+  .route('/')
+  .get(verifyAccessToken, checkIsStaffOrAdmin, getAllPhone)
+  .post(createPhone);
 router.route('/filter').get(getFilterProduct);
-
-//getOnePhone: verifyToken
-//updatePhone: verifyToken, checkingAdmin
-//deletePhone: verifyToken, checkingAdmin
-router.route('/:pid').get(getOnePhone).put(updatePhone).delete(deletePhone);
+router
+  .route('/:pid')
+  .get(verifyAccessToken, getOnePhone)
+  .put(verifyAccessToken, checkIsStaffOrAdmin, updatePhone)
+  .delete(verifyAccessToken, checkIsStaffOrAdmin, deletePhone);
 
 module.exports = router;
