@@ -1,7 +1,9 @@
-import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
+import { AiFillEyeInvisible, AiFillEye, AiOutlineCheck } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
 import bannerHero from "../../assets/bannerHero.jpg";
+
+import { signUp } from "../../api/auth";
 import { Logo } from "../../component";
 import { useEffect, useState } from "react";
 
@@ -11,6 +13,8 @@ const Signup = () => {
         username: "",
         email: "",
         password: "",
+        phoneNumber: "",
+        name: "",
     });
     const [showPassword, setShowPassword] = useState({
         password: false,
@@ -20,11 +24,20 @@ const Signup = () => {
 
     const [signingUp, setSigningUp] = useState(false);
 
-    const handleSubmit = (e) => {
+    const [signUpSuccessful, setSignUpSuccessful] = useState(false);
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        if (userDetails.password != confirmPassword) {
+        } else {
+            const response = await signUp(userDetails).then((data) => {
+                console.log(data);
+            });
+        }
     };
 
-    const isDisabled = signingUp || !userDetails.username || !userDetails.email || !userDetails.password || !confirmPassword;
+    const isDisabled =
+        signingUp || !userDetails.username || !userDetails.email || !userDetails.password || !confirmPassword || userDetails.name || userDetails.phoneNumber;
     return (
         <main className='grid  grid-rows-1 md:grid-cols-2 w-full  h-screen m-auto '>
             <section className=' hidden md:block max-h-screen  rounded-lg'>
@@ -34,9 +47,29 @@ const Signup = () => {
                 <section className='px-10 py-10 rounded-md shadow-md bg-white/[0.7] flex flex-col gap-6 w-full max-w-lg'>
                     <Logo />
                     <div className='flex flex-col gap-2 '>
-                        <h1 className='text-4xl font-bold mb-3'>Sign up</h1>
+                        <h1 className='text-4xl font-bold mb-3'>Đăng ký tài khoản</h1>
 
                         <form action='' className='flex flex-col gap-4 py-5' onSubmit={handleSubmit}>
+                            <label className='flex flex-col'>
+                                <input
+                                    type='text'
+                                    required
+                                    placeholder='Họ tên người dùng...'
+                                    className='border rounded-md p-1.5 shadow-sm'
+                                    value={userDetails.name}
+                                    onChange={(e) => setUserDetails({ ...userDetails, name: e.target.value })}
+                                />
+                            </label>
+                            <label className='flex flex-col'>
+                                <input
+                                    type='text'
+                                    required
+                                    placeholder='Số điện thoại'
+                                    className='border rounded-md p-1.5 shadow-sm'
+                                    value={userDetails.phoneNumber}
+                                    onChange={(e) => setUserDetails({ ...userDetails, phoneNumber: e.target.value })}
+                                />
+                            </label>
                             <label className='flex flex-col'>
                                 <input
                                     type='text'
@@ -60,7 +93,7 @@ const Signup = () => {
                             <label className='flex flex-col relative'>
                                 <input
                                     required
-                                    placeholder='Password'
+                                    placeholder='Mật khẩu'
                                     type={showPassword.password ? "text" : "password"}
                                     className='border rounded-md p-1.5 shadow-sm'
                                     value={userDetails.password}
@@ -81,7 +114,7 @@ const Signup = () => {
                             <label className='flex flex-col relative'>
                                 <input
                                     required
-                                    placeholder='Confirm Password'
+                                    placeholder='Xác nhận mật khẩu'
                                     type={showPassword.confirmPassword ? "text" : "password"}
                                     className='border rounded-md p-1.5 shadow-sm'
                                     value={confirmPassword}
@@ -108,9 +141,9 @@ const Signup = () => {
                                     Password Mismatch
                                 </p>
                             </label>
-                            <div className='w-full py-2   flex flex-col gap-4 items-center'>
+                            <div className='w-full py-2 flex flex-col gap-4 items-center'>
                                 <button type='submit' className='btn-primary w-2/3 text-lg text-center' disabled={isDisabled}>
-                                    {signingUp ? "Signing up..." : "Create Account"}
+                                    {signingUp ? (!signUpSuccessful ? "Đang xử lý..." : "Đăng ký thành công") : "Tạo tài khoản"}
                                 </button>
                                 <p className='text-gray-600 text-sm'>
                                     Already have an account?{" "}
