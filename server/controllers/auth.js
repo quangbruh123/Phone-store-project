@@ -17,6 +17,7 @@ const login = asyncHandler(async (req, res) => {
 	}
 
 	if (!user.validatePassword(pass)) {
+		console.log("oke");
 		throw new CustomAPIError(`Password is not correct`, 400);
 	}
 
