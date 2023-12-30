@@ -9,9 +9,11 @@ const cartReducer = createSlice({
     reducers: {
         addItems: (state, action) => {
             state.quantity += 1;
+            state.cartItems.push(action.payload);
         },
         removeItems: (state, action) => {
             state.quantity -= 1;
+            state.cartItems.splice(action.payload, 1);
         },
         clearItems: (state, action) => {
             state.quantity = 0;

@@ -1,10 +1,11 @@
 import axiosInstance from "./axiosConfig";
 
-export const getAllPhone = async () => {
+export const signUp = async (userInfo) => {
     try {
         const response = await axiosInstance({
-            method: "get",
-            url: "/phone",
+            method: "post",
+            url: "/auth/register",
+            data: userInfo,
         });
         return response;
     } catch (error) {
@@ -12,12 +13,12 @@ export const getAllPhone = async () => {
     }
 };
 
-export const getFilterProduct = async (query) => {
+export const login = async (payload) => {
     try {
         const response = await axiosInstance({
-            method: "get",
-            url: "/phone/filter",
-            params: query,
+            method: "post",
+            url: "/auth/login",
+            data: payload,
         });
         return response;
     } catch (error) {
@@ -25,11 +26,14 @@ export const getFilterProduct = async (query) => {
     }
 };
 
-export const getOnePhone = async (pid) => {
+export const forgotPassword = async (email) => {
     try {
         const response = await axiosInstance({
-            method: "get",
-            url: `/phone/${pid}`,
+            method: "post",
+            url: "/auth/forget-password",
+            params: {
+                email: email,
+            },
         });
         return response;
     } catch (error) {

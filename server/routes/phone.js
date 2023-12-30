@@ -1,10 +1,24 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const { getAllPhone, getFilterProduct, getOnePhone, createPhone, updatePhone, deletePhone } = require("../controllers/phone");
-const { verifyToken, checkingAdmin } = require("../middlewares/verifyToken");
+const {
+  getAllPhone,
+  getFilterProduct,
+  getOnePhone,
+  createPhone,
+  updatePhone,
+  deletePhone,
+} = require('../controllers/phone');
+const { verifyToken, checkingAdmin } = require('../middlewares/verifyToken');
 
-router.route("/").get(verifyToken, checkingAdmin, getAllPhone).post(createPhone);
-router.route("/filter").get(getFilterProduct);
-router.route("/:pid").get(verifyToken, getOnePhone).put(verifyToken, checkingAdmin, updatePhone).delete(verifyToken, checkingAdmin, deletePhone);
+// getAllPhone: verifyToken, checkingAdmin
+router.route('/').get(getAllPhone).post(createPhone);
+
+//getFilterProduct
+router.route('/filter').get(getFilterProduct);
+
+//getOnePhone: verifyToken
+//updatePhone: verifyToken, checkingAdmin
+//deletePhone: verifyToken, checkingAdmin
+router.route('/:pid').get(getOnePhone).put(updatePhone).delete(deletePhone);
 
 module.exports = router;
