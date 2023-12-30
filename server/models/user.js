@@ -66,8 +66,8 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-userSchema.methods.validatePassword = async function (password) {
-  const res = await bcrypt.compareSync(password, this.password);
+userSchema.methods.validatePassword = function (password) {
+  const res = bcrypt.compareSync(password, this.password);
   console.log(res);
   return res;
 };
