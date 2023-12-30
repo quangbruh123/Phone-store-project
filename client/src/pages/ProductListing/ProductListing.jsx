@@ -55,8 +55,8 @@ const ProductListing = () => {
                 </div>
             ) : ( */}
             <div>
-                <header className='mb-3'>
-                    <img src={bannerImg} alt='bannerImg' className='rounded-md h-full min-h-[10rem] object-cover' />
+                <header className='mb-3 h-[20rem]'>
+                    <img src={bannerImg} alt='bannerImg' className='rounded-md h-full w-full object-cover' />
                 </header>
                 <section className='py-3 flex flex-col md:flex-row gap-2 justify-between'>
                     <h1 className='text-2xl font-bold'>Danh sách sản phẩm</h1>
