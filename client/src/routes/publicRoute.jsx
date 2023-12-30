@@ -1,13 +1,15 @@
 import ProductListing from "../pages/ProductListing/ProductListing";
+import Login from "../pages/Login/Login";
+import Signup from "../pages/Signup/Signup";
 
 const authRoutes = [
     {
         path: "/login",
-        //   element: <Login />,
+        element: <Login />,
     },
     {
         path: "/signup",
-        //   element: <Signup />,
+        element: <Signup />,
     },
 ];
 
