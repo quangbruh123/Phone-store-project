@@ -10,7 +10,9 @@ const port = process.env.PORT || 8000;
 
 const mainRouter = require("./routes");
 const handlingResponse = require("./middlewares/handlingResponse");
+const cookieParser = require("cookie-parser");
 // Middlewares
+app.use(cookieParser());
 app.use(
 	cors({
 		credentials: true,
