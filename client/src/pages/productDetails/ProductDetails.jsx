@@ -5,7 +5,10 @@ import { BsBookmarkHeart, BsFillBookmarkHeartFill, BsStarFill } from "react-icon
 import { GiRoundStar } from "react-icons/gi";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { useDispatch, useSelector } from "react-redux";
 
+import { addCartItems, getCartItems, getQuantity } from "../../store/cartReducer";
+import { addFavoriteItem, getFavoriteItem, getCount } from "../../store/favoriteReducer";
 import { getOnePhone } from "../../api/phone";
 import { StarRating } from "../../component";
 import Comments from "../../component/products/Comments";
@@ -13,7 +16,13 @@ import Comments from "../../component/products/Comments";
 const ProductDetails = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const dispatch = useDispatch();
     const { productId } = useParams();
+
+    const cartCount = useSelector(getQuantity);
+    const favoriteCount = useSelector(getCount);
+    const cartItems = useSelector(getCartItems);
+    const favoriteItems = useSelector(getFavoriteItem);
 
     const [productInfo, setProductInfo] = useState({});
     const [technicalSpecifications, setTechnicalSpecification] = useState({});
@@ -106,11 +115,41 @@ const ProductDetails = () => {
                         </ul>
                     </div>
                     <div className='flex items-center gap-3'>
-                        <div className='px-4 py-2 border-[1px] border-black rounded-2xl flex items-center gap-2 cursor-pointer hover:bg-gray-200 transition-all'>
+                        <div
+                            className='px-4 py-2 border-[1px] border-black rounded-2xl flex items-center gap-2 cursor-pointer hover:bg-gray-200 transition-all'
+                            onClick={() => {
+                                var temp = 0;
+                                cartItems?.map((item) => {
+                                    if (productInfo?._id == item._id) {
+                                        temp = -1;
+                                    } else {
+                                        temp += 1;
+                                    }
+                                });
+                                if (temp == cartCount) {
+                                    dispatch(addCartItems(productInfo));
+                                }
+                            }}
+                        >
                             <HiOutlineShoppingBag></HiOutlineShoppingBag>
                             <div>Thêm vào giỏ hàng</div>
                         </div>
-                        <div className='px-4 py-2 border-[1px] border-black bg-black text-white rounded-2xl flex items-center gap-2 cursor-pointer hover:bg-slate-900 transition-all'>
+                        <div
+                            className='px-4 py-2 border-[1px] border-black bg-black text-white rounded-2xl flex items-center gap-2 cursor-pointer hover:bg-slate-900 transition-all'
+                            onClick={() => {
+                                var temp = 0;
+                                favoriteItems?.map((item) => {
+                                    if (productInfo?._id == item._id) {
+                                        temp = -1;
+                                    } else {
+                                        temp += 1;
+                                    }
+                                });
+                                if (temp == favoriteCount) {
+                                    dispatch(addFavoriteItem(productInfo));
+                                }
+                            }}
+                        >
                             <BsBookmarkHeart></BsBookmarkHeart>
                             <div>Thêm vào danh sách yêu thích</div>
                         </div>

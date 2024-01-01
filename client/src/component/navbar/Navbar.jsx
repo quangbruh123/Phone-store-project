@@ -3,11 +3,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { BsBookmarkHeart } from "react-icons/bs";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { MdOutlineExplore } from "react-icons/md";
+import { useSelector } from "react-redux";
 
+import { getQuantity } from "../../store/cartReducer";
+import { getCount } from "../../store/favoriteReducer";
 import { RxHamburgerMenu } from "react-icons/rx";
 import defaultUser from "../../assets/defaultUser.png";
 import MenuDropdown from "./MenuDropdown";
 import Logo from "./Logo";
+import { getAccessToken } from "../../store/authReducer";
 // import {
 //   useAuthContext,
 //   useCartContext,
@@ -17,9 +21,9 @@ import Logo from "./Logo";
 // import Search from "../filters/Search";
 
 const Navbar = () => {
-    // const { token } = useAuthContext();
-    // const { cart } = useCartContext();
-    // const { wishlist } = useWishlistContext();
+    const token = useSelector(getAccessToken);
+    const cartCount = useSelector(getQuantity);
+    const favoriteCount = useSelector(getCount);
     const navigate = useNavigate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [colorChange, setColorChange] = useState(false);
@@ -69,22 +73,22 @@ const Navbar = () => {
                             onClick={() => navigate("/wishlist")}
                         >
                             <BsBookmarkHeart />
-                            {/* {token && wishlist.length > 0 && (
-                <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-rose-600 border-2 border-[--theme-color] rounded-full -top-2 -right-2 ">
-                  {wishlist.length}
-                </div>
-              )} */}
+                            {token && favoriteCount > 0 && (
+                                <div className='absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-rose-600 border-2 border-[--theme-color] rounded-full -top-2 -right-2 '>
+                                    {favoriteCount}
+                                </div>
+                            )}
                         </li>
                         <li
                             className='relative bg-yellow-500 text-white p-2 rounded-full hover:bg-yellow-800 cursor-pointer mx-2 transition shadow-sm'
                             onClick={() => navigate("/cart")}
                         >
                             <HiOutlineShoppingBag />
-                            {/* {token && cart.length > 0 && (
-                <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-rose-600 border-2 border-[--theme-color] rounded-full -top-2 -right-2 ">
-                  {cart.length}
-                </div>
-              )} */}
+                            {token && cartCount > 0 && (
+                                <div className='absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-rose-600 border-2 border-[--theme-color] rounded-full -top-2 -right-2 '>
+                                    {cartCount}
+                                </div>
+                            )}
                         </li>
                     </ul>
                     <section className='md:hidden cursor-pointer relative'>
