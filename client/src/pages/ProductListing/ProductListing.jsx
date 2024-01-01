@@ -4,7 +4,7 @@ import { MdKeyboardArrowUp } from "react-icons/md";
 import bannerImg from "../../assets/bannerHero.jpg";
 import loadingGif from "../../assets/loading.gif";
 
-import { Filters, SingleProduct, SortBy } from "../../component";
+import { Filters, SortBy, SingleProduct } from "../../component";
 
 // import { useProductsContext } from "../contexts";
 import { useEffect, useState } from "react";
@@ -17,6 +17,7 @@ const ProductListing = () => {
     const location = useLocation();
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [showScrollArrow, setShowScrollArrow] = useState(false);
+    const [productList, setProductList] = useState([]);
 
     const { data, isLoading, error } = useFetchDataForObject("/phone/filter", null);
 
@@ -27,7 +28,6 @@ const ProductListing = () => {
     //         setIsFilterOpen(true);
     //     }
     // }, []);
-    console.log(data);
 
     const scrollToTop = () => {
         window.scrollTo({
@@ -50,6 +50,10 @@ const ProductListing = () => {
         };
     }, []);
 
+    useEffect(() => {
+        setProductList(data?.products);
+    }, [data]);
+
     return (
         <>
             {isLoading ? (
@@ -64,7 +68,9 @@ const ProductListing = () => {
                         <img src={bannerImg} alt='bannerImg' className='rounded-md h-full w-full object-cover' />
                     </header>
                     <section className='py-3 flex flex-col md:flex-row gap-2 justify-between'>
-                        <h1 className='text-2xl font-bold'>Danh sách sản phẩm</h1>
+                        <h1 className='text-2xl font-bold' onClick={() => console.log(productList)}>
+                            Danh sách sản phẩm
+                        </h1>
                         <div className='flex items-center gap-2'>
                             <Filters isFilterOpen={isFilterOpen} setIsFilterOpen={setIsFilterOpen} />
                             <SortBy />
@@ -80,15 +86,16 @@ const ProductListing = () => {
                         </div>
                     </section>
 
-                    {/* {productsList.length > 0 ? (
-                    <main className='relative grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4'>
-                        {productsList.map((glass) => (
-                            <SingleProduct key={glass.id} product={glass} />
-                        ))}
-                    </main>
-                ) : ( */}
-                    <p className='font-sans text-4xl  font-bold uppercase  tracking-wide text-gray-300 text-center w-full py-32'>Không có sản phẩm!</p>
-                    {/* )} */}
+                    {productList?.length > 0 ? (
+                        <main className='relative grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4'>
+                            {productList.map((phone, idx) => {
+                                return <SingleProduct key={idx} product={phone} />;
+                            })}
+                        </main>
+                    ) : (
+                        <p className='font-sans text-4xl  font-bold uppercase  tracking-wide text-gray-300 text-center w-full py-32'>Không có sản phẩm!</p>
+                    )}
+
                     <button
                         className={` fixed bottom-10 bg-gray-800 right-2 p-2 rounded-full text-xl shadow-2xl transition-all delay-100 ease-in-out ${
                             showScrollArrow ? "block" : "hidden"

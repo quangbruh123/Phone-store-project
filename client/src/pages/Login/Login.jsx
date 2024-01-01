@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import { setAccessToken } from "../../store/authReducer";
-import { login } from "../../api/auth";
+import { login, apiLogin } from "../../api/auth";
 import bannerHero from "../../assets/bannerHero.jpg";
 import { Logo } from "../../component";
 import { AiOutlineCheck } from "react-icons/ai";
@@ -32,7 +32,7 @@ const Login = () => {
                 setLoginSuccesful(true);
                 setInterval(() => navigate("/"), 1000);
             } else {
-                window.alert(data.response.data.msg);
+                window.alert(data.response?.data?.msg || data.message);
                 setLoggingIn(false);
             }
         });

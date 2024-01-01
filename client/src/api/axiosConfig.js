@@ -1,4 +1,6 @@
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { getAccessToken } from "../store/authReducer";
 
 const axiosInstance = axios.create({
     baseURL: import.meta.env.VITE_SERVER_URL,
@@ -6,13 +8,11 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
     function (config) {
-        //   const local =
-        //     window.localStorage.getItem("persist:user") &&
-        //     JSON.parse(window.localStorage.getItem("persist:user"));
+        const local = window.localStorage.getItem("persist:user") && JSON.parse(window.localStorage.getItem("persist:user"));
 
-        //   const token = local.accessToken.replace(/"/g, "");
+        const token = local.accessToken.replace(/"/g, "");
 
-        //   config.headers.Authorization = `Bearer ${token}`;
+        config.headers.Authorization = `Bearer ${token}`;
 
         return config;
     },
