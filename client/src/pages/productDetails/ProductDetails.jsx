@@ -42,7 +42,7 @@ const ProductDetails = () => {
     // }, [allProducts]);
 
     useEffect(() => {
-        const response = getOnePhone(productId).then((data) => {
+        getOnePhone(productId).then((data) => {
             console.log(data);
             setProductInfo(data.data);
             setTechnicalSpecification(data.data.technicalSpecifications);
@@ -55,7 +55,7 @@ const ProductDetails = () => {
                 <Carousel className='w-[45%] h-full'>
                     {productInfo?.imageLinks?.map((img, idx) => {
                         return (
-                            <div className='w-full h-full'>
+                            <div key={idx} className='w-full h-full'>
                                 <img src={img} className='h-full w-full'></img>
                                 <p className='legend'>
                                     {productInfo?.phoneName} {idx + 1}

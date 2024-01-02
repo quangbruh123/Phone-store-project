@@ -50,23 +50,20 @@ const Navbar = () => {
         >
             <div className='flex justify-between w-full items-center'>
                 <section className='relative flex items-center'>
+                    <Logo />
+                </section>
+                <div className='hidden  sm:block sm:w-1/3 relative'>{/* <Search /> */}</div>
+
+                <section className='flex items-center'>
                     <Link to='/profile'>
                         <img
-                            className='rounded-full border-2  bg-yellow-300 me-3 hover:bg-yellow-500 cursor-pointer'
+                            className='rounded-full border-2  bg-yellow-300  hover:bg-yellow-500 cursor-pointer'
                             src={defaultUser}
                             alt='userProfileImage'
                             width={40}
                         />
                     </Link>
 
-                    <Logo />
-                </section>
-                <div className='hidden  sm:block sm:w-1/3 relative'>{/* <Search /> */}</div>
-
-                <section className='flex items-center'>
-                    <Link to='/products' className='mx-2 px-3 py-1 shadow-sm rounded-md text-white bg-yellow-700 text-sm hover:bg-yellow-800 transition'>
-                        <span className='hidden xs:block'>Khám phá</span> <MdOutlineExplore className='xs:hidden' />
-                    </Link>
                     <ul className=' hidden md:flex justify-between text-2xl ps-1'>
                         <li
                             className='relative bg-gray-200  p-2 rounded-full hover:bg-yellow-800 hover:text-white cursor-pointer mx-2 transition shadow-sm'

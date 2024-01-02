@@ -26,11 +26,6 @@ const contentRoutes = [
     },
 
     {
-        path: "/product/",
-        element: <ProductDetails />,
-    },
-
-    {
         path: "/mockman",
         //   element: <Mockman />,
     },
