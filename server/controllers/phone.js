@@ -9,13 +9,18 @@ const getAllPhone = asyncHandler(async (req, res) => {
 });
 
 const createPhone = asyncHandler(async (req, res) => {
-	// const newPhone = await Phone.create({
-	// 	...req.body,
-	// 	slug: createSlug(req.body.phoneName),
-	// });
-	console.log(req.files);
-	console.log(req.file);
-	return res.status(201).json("newPhone");
+	const technicalSpecifications = {
+		lmao: 1,
+		"Màn hình": "500 inch",
+	};
+	const newPhone = await Phone.create({
+		...req.body,
+		slug: createSlug(req.body.phoneName),
+		thumb: req.files.thumb.path,
+		imageLinks: req.files.imageLinks.map((el) => el.path),
+		technicalSpecifications,
+	});
+	return res.status(201).json(newPhone);
 });
 
 const getOnePhone = asyncHandler(async (req, res) => {

@@ -4,7 +4,7 @@ const slice = createSlice({
     name: "favorite",
     initialState: {
         item: [],
-        count: null,
+        count: 0,
     },
     reducers: {
         addFavoriteItem: (state, action) => {
@@ -20,18 +20,12 @@ const slice = createSlice({
             state.count = null;
         },
     },
-    selectors: {
-        getCount: (state) => {
-            return state.count;
-        },
-        getFavoriteItem: (state) => {
-            return state.item;
-        },
-    },
 });
 
 export const { addFavoriteItem, removeFavoriteItem, clearFavoriteItem } = slice.actions;
 
-export const { getCount, getFavoriteItem } = slice.selectors;
+export const getCount = (state) => state.favorite.count;
+
+export const getFavoriteItem = (state) => state.favorite.item;
 
 export default slice.reducer;

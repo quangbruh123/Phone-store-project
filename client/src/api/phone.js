@@ -30,6 +30,7 @@ export const getOnePhone = async (pid) => {
         const response = await axiosInstance({
             method: "get",
             url: `/phone/${pid}`,
+            withCredentials: true,
         });
         return response;
     } catch (error) {

@@ -8,10 +8,10 @@ const privateRoutes = [
         path: "/wishlist",
         //   element: <Wishlist />,
     },
-    {
-        path: "/checkout",
-        //   element: <Checkout />,
-    },
+    // {
+    //     path: "/checkout",
+    //     //   element: <Checkout />,
+    // },
     {
         path: "/orders",
         //   element: <Orders />,

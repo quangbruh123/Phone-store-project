@@ -1,4 +1,5 @@
 import ProductListing from "../pages/ProductListing/ProductListing";
+import ProductDetails from "../pages/productDetails/ProductDetails";
 import Login from "../pages/Login/Login";
 import Signup from "../pages/Signup/Signup";
 
@@ -20,8 +21,8 @@ const contentRoutes = [
     },
 
     {
-        path: "/product/:productId",
-        //   element: <ProductDetails />,
+        path: "/product/:productId/:slug",
+        element: <ProductDetails />,
     },
 
     {

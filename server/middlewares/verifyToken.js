@@ -12,7 +12,7 @@ const verifyAccessToken = async (req, res, next) => {
 		const accessToken = authToken.split(" ")[1];
 
 		const decode = jwt.verify(accessToken, process.env.SECRET_KEY);
-		req.user = { uid: decode._id, roleId: decode._roleId };
+		req.user = { uid: decode._id, role: decode.role };
 		next();
 	} catch (error) {
 		next(new CustomAPIError("Access token đã hết hạn", 401));
@@ -28,7 +28,7 @@ const verifyRefreshToken = async (req, res, next) => {
 		}
 
 		const decode = jwt.verify(refreshToken, process.env.SECRET_KEY);
-		req.user = { uid: decode._id, roleId: decode._roleId, refreshToken };
+		req.user = { uid: decode._id, role: decode.role, refreshToken };
 		next();
 	} catch (error) {
 		throw new CustomAPIError("Refresh token hết hạn", 401);
@@ -37,9 +37,8 @@ const verifyRefreshToken = async (req, res, next) => {
 
 const checkRole = (allowedRoles) => async (req, res, next) => {
 	try {
-		const { roleId } = req.user;
-
-		if (!allowedRoles.includes(roleId)) {
+		const { role } = req.user;
+		if (!allowedRoles.includes(role)) {
 			throw new CustomAPIError("Không đúng role cần vào", 401);
 		}
 		next();
