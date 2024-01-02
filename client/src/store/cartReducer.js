@@ -9,7 +9,7 @@ const cartReducer = createSlice({
     reducers: {
         addCartItems: (state, action) => {
             state.quantity += 1;
-            state.cartItems.push(action.payload);
+            state.cartItems.push({ ...action.payload, count: 1 });
         },
         removeCartItems: (state, action) => {
             state.quantity -= 1;
@@ -19,10 +19,16 @@ const cartReducer = createSlice({
             state.quantity = 0;
             state.cartItems = [];
         },
+        cartItemIncrement: (state, action) => {
+            state.cartItems[action.payload].count += 1;
+        },
+        cartItemDecrement: (state, action) => {
+            state.cartItems[action.payload].count -= 1;
+        },
     },
 });
 
-export const { addCartItems, removeCartItems, clearCartItems } = cartReducer.actions;
+export const { addCartItems, removeCartItems, clearCartItems, cartItemDecrement, cartItemIncrement } = cartReducer.actions;
 
 export default cartReducer.reducer;
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { HiOutlineShoppingBag } from "react-icons/hi";
+import { HiOutlineShoppingBag, HiShoppingBag } from "react-icons/hi";
 import { BsBookmarkHeart, BsFillBookmarkHeartFill, BsStarFill } from "react-icons/bs";
 import { GiRoundStar } from "react-icons/gi";
 import { Carousel } from "react-responsive-carousel";
@@ -12,6 +12,7 @@ import { addFavoriteItem, getFavoriteItem, getCount } from "../../store/favorite
 import { getOnePhone } from "../../api/phone";
 import { StarRating } from "../../component";
 import Comments from "../../component/products/Comments";
+import { setAccessToken } from "../../store/authReducer";
 
 const ProductDetails = () => {
     const navigate = useNavigate();
@@ -26,28 +27,51 @@ const ProductDetails = () => {
 
     const [productInfo, setProductInfo] = useState({});
     const [technicalSpecifications, setTechnicalSpecification] = useState({});
-    const [loading, setLoading] = useState(false);
 
-    // useEffect(() => {
-    //   (async () => {
-    //     setLoading(true);
-    //     try {
-    //       const response = await getProductByIdService(productId);
-    //     } catch (err) {
-    //       console.log(err);
-    //     } finally {
-    //       setLoading(false);
-    //     }
-    //   })();
-    // }, [allProducts]);
+    const [inCartList, setInCartList] = useState(false);
+    const [inFavoriteList, setInFavoriteList] = useState(false);
 
     useEffect(() => {
         getOnePhone(productId).then((data) => {
             console.log(data);
-            setProductInfo(data.data);
-            setTechnicalSpecification(data.data.technicalSpecifications);
+            if (data?.response) {
+                if (data?.response?.status == 401) {
+                    dispatch(setAccessToken(null));
+                    window.alert("Phiên hoạt động đã hết hạn. Yêu cầu đăng nhập lại");
+                    navigate("/login");
+                }
+            } else {
+                setProductInfo(data.data);
+                setTechnicalSpecification(data.data.technicalSpecifications);
+            }
         });
     }, []);
+
+    useEffect(() => {
+        var temp_favorite = 0;
+        favoriteItems?.map((item) => {
+            if (productInfo?._id == item._id) {
+                temp_favorite = -1;
+            } else {
+                temp_favorite += 1;
+            }
+        });
+        if (temp_favorite != favoriteCount) {
+            setInFavoriteList(true);
+        }
+
+        var temp_cart = 0;
+        favoriteItems?.map((item) => {
+            if (productInfo?._id == item._id) {
+                temp_cart = -1;
+            } else {
+                temp_cart += 1;
+            }
+        });
+        if (temp_cart != favoriteCount) {
+            setInCartList(true);
+        }
+    }, [productInfo]);
 
     return (
         <div className='pt-5 sm:pt-3 pb-2'>
@@ -75,7 +99,7 @@ const ProductDetails = () => {
                     <div className='text-justify mb-5'>{productInfo?.description}</div>
                     <div className='flex gap-2 items-center mb-3'>
                         <div className='font-bold text-2xl'>Giá sản phẩm:</div>
-                        <div className='text-3xl text-amber-600'>{(productInfo?.price * 1000).toLocaleString("vi-VN")}₫</div>
+                        <div className='text-3xl text-amber-600'>{(productInfo?.price * 1).toLocaleString("vi-VN")}₫</div>
                     </div>
                     <div className='font-semibold text-2xl mb-3'>Về sản phẩm</div>
                     <div className='mb-5'>
@@ -128,11 +152,22 @@ const ProductDetails = () => {
                                 });
                                 if (temp == cartCount) {
                                     dispatch(addCartItems(productInfo));
+                                } else {
+                                    navigate("/cart");
                                 }
                             }}
                         >
-                            <HiOutlineShoppingBag></HiOutlineShoppingBag>
-                            <div>Thêm vào giỏ hàng</div>
+                            {!inCartList ? (
+                                <>
+                                    <HiOutlineShoppingBag></HiOutlineShoppingBag>
+                                    <div>Thêm vào giỏ hàng</div>
+                                </>
+                            ) : (
+                                <>
+                                    <HiShoppingBag></HiShoppingBag>
+                                    <div>Xem chi tiết giỏ hàng</div>
+                                </>
+                            )}
                         </div>
                         <div
                             className='px-4 py-2 border-[1px] border-black bg-black text-white rounded-2xl flex items-center gap-2 cursor-pointer hover:bg-slate-900 transition-all'
@@ -150,8 +185,17 @@ const ProductDetails = () => {
                                 }
                             }}
                         >
-                            <BsBookmarkHeart></BsBookmarkHeart>
-                            <div>Thêm vào danh sách yêu thích</div>
+                            {!inFavoriteList ? (
+                                <>
+                                    <BsBookmarkHeart></BsBookmarkHeart>
+                                    <div>Thêm vào danh sách yêu thích</div>
+                                </>
+                            ) : (
+                                <>
+                                    <BsBookmarkHeart></BsBookmarkHeart>
+                                    <div>Xem danh sách yêu thích</div>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>

@@ -1,12 +1,35 @@
 import { GiRoundStar } from "react-icons/gi";
 import { BsBookmarkHeart, BsFillBookmarkHeartFill } from "react-icons/bs";
-
 import { useLocation, useNavigate } from "react-router";
+import { useSelector, useDispatch } from "react-redux";
+import { getQuantity, addCartItems, getCartItems } from "../../store/cartReducer";
+import { getCount, getFavoriteItem, addFavoriteItem } from "../../store/favoriteReducer";
+import { useState, useEffect } from "react";
 
 const SingleProduct = ({ product }) => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
-    var string = product?.price * 1000;
+    var string = product?.price;
+
+    const [inFavoriteList, setInFavoriteList] = useState(false);
+
+    const favoriteCount = useSelector(getCount);
+    const favoriteItems = useSelector(getFavoriteItem);
+
+    useEffect(() => {
+        var temp = 0;
+        favoriteItems?.map((item) => {
+            if (product?._id == item._id) {
+                temp = -1;
+            } else {
+                temp += 1;
+            }
+        });
+        if (temp != favoriteCount) {
+            setInFavoriteList(true);
+        }
+    }, []);
 
     return (
         <div
@@ -30,8 +53,27 @@ const SingleProduct = ({ product }) => {
                     <GiRoundStar className='text-yellow-400 ml-3 mt-[2px]'></GiRoundStar>
                     {product?.avgRating}
                 </div>
-                <div>
-                    <BsBookmarkHeart className='text-xl hover:text-rose-600 hover:shadow-md transition mr-3'></BsBookmarkHeart>
+                <div
+                    onClick={() => {
+                        var temp = 0;
+                        favoriteItems?.map((item) => {
+                            if (product?._id == item._id) {
+                                temp = -1;
+                            } else {
+                                temp += 1;
+                            }
+                        });
+                        if (temp == favoriteCount) {
+                            dispatch(addFavoriteItem(product));
+                            setInFavoriteList(true);
+                        }
+                    }}
+                >
+                    {!inFavoriteList ? (
+                        <BsBookmarkHeart className='text-xl hover:text-rose-600 hover:shadow-md transition mr-3'></BsBookmarkHeart>
+                    ) : (
+                        <BsFillBookmarkHeartFill className='text-xl hover:text-rose-600 hover:shadow-md transition mr-3'></BsFillBookmarkHeartFill>
+                    )}
                 </div>
             </div>
         </div>
