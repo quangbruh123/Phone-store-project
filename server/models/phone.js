@@ -26,6 +26,9 @@ const phoneSchema = new mongoose.Schema(
 				type: String,
 			},
 		],
+		thumb: {
+			type: String,
+		},
 		imageLinks: [
 			{
 				type: String,

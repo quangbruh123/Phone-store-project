@@ -9,12 +9,13 @@ const getAllPhone = asyncHandler(async (req, res) => {
 });
 
 const createPhone = asyncHandler(async (req, res) => {
-	const newPhone = await Phone.create({
-		...req.body,
-		slug: createSlug(req.body.phoneName),
-	});
-
-	return res.status(201).json(newPhone);
+	// const newPhone = await Phone.create({
+	// 	...req.body,
+	// 	slug: createSlug(req.body.phoneName),
+	// });
+	console.log(req.files);
+	console.log(req.file);
+	return res.status(201).json("newPhone");
 });
 
 const getOnePhone = asyncHandler(async (req, res) => {
