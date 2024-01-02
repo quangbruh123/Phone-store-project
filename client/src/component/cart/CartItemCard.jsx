@@ -88,7 +88,7 @@ const CartItemCard = ({ product, isSearch, setSearch, index }) => {
                     </div>
                 </div>
                 <div className='flex flex-col items-end'>
-                    <span>{(product?.price).toLocaleString("vi-VN")}₫</span>
+                    <span>{(product?.price * 1).toLocaleString("vi-VN")}₫</span>
                     {/* <span className='text-xs line-through text-gray-600'>₹ {product.price}</span> */}
                 </div>
             </div>

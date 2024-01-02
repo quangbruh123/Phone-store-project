@@ -14,7 +14,7 @@ const Cart = () => {
 
     return (
         <div className='py-2 '>
-            {cartCount > 0 && <h1 className='text-2xl font-bold p-3 '>Bag({cartCount})</h1>}
+            {cartCount > 0 && <h1 className='text-2xl font-bold p-3 '>Giỏ hàng({cartCount})</h1>}
             {cartCount != 0 ? (
                 <div className='md:grid md:grid-cols-3 gap-5'>
                     <main className='md:col-span-2'>
@@ -22,7 +22,7 @@ const Cart = () => {
                             <CartItemCard product={product} index={idx} />
                         ))}
                     </main>
-                    {/* <CartTotalCard cart={cart} /> */}
+                    <CartTotalCard cart={cartItems} />
                     haha
                 </div>
             ) : (
