@@ -27,6 +27,7 @@ const ProductDetails = () => {
 
     const [productInfo, setProductInfo] = useState({});
     const [technicalSpecifications, setTechnicalSpecification] = useState({});
+    const [comments, setComments] = useState([]);
 
     const [inCartList, setInCartList] = useState(false);
     const [inFavoriteList, setInFavoriteList] = useState(false);

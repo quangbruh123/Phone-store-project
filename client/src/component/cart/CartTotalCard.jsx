@@ -9,12 +9,22 @@ const CartTotalCard = ({ cart }) => {
     const [totalPriceOfCartProducts, setTotalPriceOfCartProducts] = useState(0);
 
     useEffect(() => {
+        var temp;
         cart.map((product) => {
-            var temp = product?.price * product?.count;
+            temp = product?.price * product?.count;
             console.log(temp);
-            setTotalPriceOfCartProducts((prev) => prev + temp);
         });
+        setTotalPriceOfCartProducts(temp);
     }, []);
+
+    useEffect(() => {
+        var temp;
+        cart.map((product) => {
+            temp = product?.price * product?.count;
+            console.log(temp);
+        });
+        setTotalPriceOfCartProducts(temp);
+    }, [cart]);
 
     return (
         <section className='md:col-span-1 py-7 px-7 rounded-md shadow-sm bg-white/[0.7] flex flex-col gap-6 w-full h-min'>
