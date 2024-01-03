@@ -79,7 +79,7 @@ const updateUser = asyncHandler(async (req, res) => {
 	if (Object.keys(req.body) === 0) {
 		throw new CustomAPIError("Missing inputs", 400);
 	}
-	const updatedUser = await User.findByIdAndUpdate(id, req.body, {
+	const updatedUser = await User.findByIdAndUpdate(_id, req.body, {
 		runValidators: true,
 		new: true,
 	}).select("-password -role -refreshToken");

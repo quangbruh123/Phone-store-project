@@ -23,7 +23,6 @@ const Cart = () => {
                         ))}
                     </main>
                     <CartTotalCard cart={cartItems} />
-                    haha
                 </div>
             ) : (
                 <div className='h-[60vh] w-full flex flex-col items-center justify-center  gap-3 '>

@@ -5,10 +5,6 @@ const { checkIsStaffOrAdmin, verifyAccessToken, checkIsUser } = require("../midd
 
 router.route("/").get(getAllUser);
 router.route("/current").get(verifyAccessToken, getCurrentUser).put(verifyAccessToken, updateCart).delete(verifyAccessToken, removeProductInCart); //verifyToken
-router
-	.route("/:uid")
-	.get(verifyAccessToken, getOneUser)
-	.put(verifyAccessToken, checkIsStaffOrAdmin, updateUser)
-	.delete(verifyAccessToken, checkIsStaffOrAdmin, deleteUser);
+router.route("/:uid").get(verifyAccessToken, getOneUser).put(verifyAccessToken, updateUser).delete(verifyAccessToken, checkIsStaffOrAdmin, deleteUser);
 router.route("/admin/:uid").put(verifyAccessToken, checkIsStaffOrAdmin, updateUserByAdmin);
 module.exports = router;

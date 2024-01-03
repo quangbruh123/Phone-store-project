@@ -6,6 +6,7 @@ export const getCurrentUser = async () => {
         const response = await axiosInstance({
             method: "get",
             url: "/user/current",
+            withCredentials: true,
         });
         return response;
     } catch (error) {
