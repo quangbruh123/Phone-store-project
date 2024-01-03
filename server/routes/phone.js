@@ -22,5 +22,5 @@ router
 	.get(verifyAccessToken, getOnePhone)
 	.put(verifyAccessToken, checkIsStaffOrAdmin, updatePhone)
 	.delete(verifyAccessToken, checkIsStaffOrAdmin, deletePhone);
-router.route("/rate").post(verifyAccessToken, rate);
+router.route("/rate").post(verifyAccessToken, checkIsUser, rate);
 module.exports = router;
