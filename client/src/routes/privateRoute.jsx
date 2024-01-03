@@ -1,6 +1,7 @@
 import Cart from "../pages/Cart/Cart";
 import Wishlist from "../pages/Wistlist/Wishlist";
 import Profile from "../pages/Profile/Profile";
+import AdminPage from "../pages/AdminPage";
 const privateRoutes = [
     {
         path: "/cart",
@@ -21,6 +22,10 @@ const privateRoutes = [
     {
         path: "/profile",
         element: <Profile />,
+    },
+    {
+        path: "/admin",
+        element: <AdminPage />,
     },
 ];
 export { privateRoutes };
