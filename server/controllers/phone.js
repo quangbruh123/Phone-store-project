@@ -145,16 +145,20 @@ const getFilterProduct = asyncHandler(async (req, res) => {
 });
 
 const rate = asyncHandler(async (req, res) => {
-	const { uid } = req.user;
+	const { _id } = req.user;
 	const { star, comment, pid } = req.body; // star với pid là bắt buộc, comment có hay không cũng đc
 
 	if (!star || !pid) {
 		throw new CustomAPIError("Missing số sao & pid", 400);
 	}
 
-	const product = await Phone.findById(pid);
+	const phone = await Phone.findById(pid);
 
-	const review = Phone.ratings.find((rating) => {
+	if (!phone) {
+		throw new CustomAPIError("Không có phone với id này", 400);
+	}
+
+	const review = phone.ratings.find((rating) => {
 		return rating.postedBy.toString() === _id;
 	}); // kiểm tra xem cái sản phẩm đó với user đó thì thằng đó đã đánh giá cho sản phẩm đó chưa
 

@@ -3,7 +3,7 @@ const errorHandler = (err, req, res, next) => {
 		msg: err.message || "Something wrong",
 		statusCode: err.statusCode || 500,
 	};
-	console.log(err);
+
 	if (err.errors) {
 		customError.msg = Object.values(err.errors)
 			.map((item) => item.message)

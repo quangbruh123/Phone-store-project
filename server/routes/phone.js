@@ -11,6 +11,7 @@ const {
 const {
   verifyAccessToken,
   checkIsStaffOrAdmin,
+  checkIsUser,
 } = require('../middlewares/verifyToken');
 const uploadCloud = require('../config/cloudinary');
 const router = express.Router();
@@ -31,8 +32,7 @@ router.route('/filter').get(getFilterProduct);
 router
   .route('/:pid')
   .get(verifyAccessToken, getOnePhone)
-  .post(verifyAccessToken, rate)
   .put(verifyAccessToken, checkIsStaffOrAdmin, updatePhone)
   .delete(verifyAccessToken, checkIsStaffOrAdmin, deletePhone);
-
+router.route('/rate').post(verifyAccessToken, checkIsUser, rate);
 module.exports = router;
