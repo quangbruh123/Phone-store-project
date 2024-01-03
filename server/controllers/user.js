@@ -94,7 +94,7 @@ const updateUser = asyncHandler(async (req, res) => {
 	});
 });
 
-const getCurrentUser = asyncHandler(async (req, res, next) => {
+const getCurrentUser = asyncHandler(async (req, res) => {
 	const { _id } = req.user;
 
 	if (!_id) {
@@ -109,6 +109,52 @@ const getCurrentUser = asyncHandler(async (req, res, next) => {
 	return res.status(200).json(currentUser);
 });
 
+const updateCart = asyncHandler(async (req, res) => {
+	const { _id } = req.user;
+	const { pid, quantity = 1 } = req.body;
+
+	if (pid) {
+		throw new CustomAPIError("Missing phone id", 400);
+	}
+
+	const user = await User.findById(_id).select("cart");
+	const alreadyHave = user.cart.find((el) => el.product.toString() === pid);
+
+	let updateCart;
+
+	if (alreadyHave) {
+		updateCart = await User.updateOne(
+			{
+				$and: [{ _id: _id }, { cart: { $elemMatch: alreadyHave } }],
+			},
+			{
+				$set: {
+					"cart.$.quantity": quantity,
+				},
+			},
+			{ new: true, runValidators: true }
+		);
+	} else {
+		updateCart = await User.findByIdAndUpdate(_id, { $push: { cart: { product: pid, quantity } } }, { new: true, runValidators: true });
+	}
+
+	return res.status(204).send();
+});
+const removeProductInCart = asyncHandler(async (req, res) => {
+	const { _id } = req.user;
+	const { pid } = req.params;
+
+	if (pid) {
+		throw new CustomAPIError("Missing phone id", 400);
+	}
+
+	const user = await User.findById(_id).select("cart");
+
+	let updateCart = await User.findByIdAndUpdate(_id, { $pull: { cart: { product: pid } } }, { new: true, runValidators: true });
+
+	return res.status(204).send();
+});
+
 module.exports = {
 	getAllUser,
 	getOneUser,
@@ -116,4 +162,6 @@ module.exports = {
 	updateUser,
 	deleteUser,
 	updateUserByAdmin,
+	updateCart,
+	removeProductInCart,
 };

@@ -20,9 +20,10 @@ const createPhone = asyncHandler(async (req, res) => {
 	const newPhone = await Phone.create({
 		...req.body,
 		slug: createSlug(req.body.phoneName),
-		thumb: req.files?.thumb?.path,
+		thumb: req.files?.thumb[0]?.path,
 		imageLinks: req.files?.imageLinks?.map((el) => el.path),
 	});
+
 	return res.status(201).json(newPhone);
 });
 
@@ -38,7 +39,9 @@ const getOnePhone = asyncHandler(async (req, res) => {
 
 const updatePhone = asyncHandler(async (req, res) => {
 	const { pid } = req.params;
-	const { thumb, imageLinks } = req.files;
+
+	const thumb = req.files.thumb[0];
+	const imageLinks = req.files.imageLinks;
 
 	const phone = await Phone.findById(pid);
 	if (!phone) {
@@ -49,7 +52,7 @@ const updatePhone = asyncHandler(async (req, res) => {
 		await deleteCloudinaryImage(phone.thumb);
 	}
 
-	if (imageLinks) {
+	if (Array.isArray(imageLinks)) {
 		for (const imageLink of phone.imageLinks) {
 			await deleteCloudinaryImage(imageLink);
 		}
@@ -57,7 +60,7 @@ const updatePhone = asyncHandler(async (req, res) => {
 
 	const updatedPhone = await Phone.findByIdAndUpdate(
 		pid,
-		{ ...req.body, slug: createSlug(req.body.phoneName) },
+		{ ...req.body, slug: createSlug(req.body.phoneName), thumb: thumb.path, imageLinks: imageLinks.map((el) => el.path) },
 		{
 			runValidators: true,
 			new: true,
@@ -77,7 +80,7 @@ const deletePhone = asyncHandler(async (req, res) => {
 	const deletedProduct = await Phone.findByIdAndDelete(pid);
 
 	if (!deletedProduct) {
-		throw new NotFoundError("No product with that pid to delete");
+		throw new CustomAPIError("No product with that pid to delete", 400);
 	}
 
 	return res.status(204).send();
@@ -152,7 +155,7 @@ const rate = asyncHandler(async (req, res) => {
 	const { star, comment, pid } = req.body; // star với pid là bắt buộc, comment có hay không cũng đc
 
 	if (!star || !pid) {
-		throw new BadRequestError("Missing số sao & pid");
+		throw new CustomAPIError("Missing số sao & pid", 400);
 	}
 
 	const product = await Product.findById(pid);
