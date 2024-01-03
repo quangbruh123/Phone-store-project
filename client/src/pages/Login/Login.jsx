@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import { getAccessToken, setAccessToken } from "../../store/authReducer";
+import { getAccessToken, setAccessToken, setUser } from "../../store/authReducer";
 import { login, apiLogin } from "../../api/auth";
 import bannerHero from "../../assets/bannerHero.jpg";
 import { Logo } from "../../component";
@@ -27,17 +27,18 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoggingIn(true);
-        const response = await login(loginCredentials).then((data) => {
-            if (data.status && data.status == 200) {
-                console.log(data);
-                dispatch(setAccessToken(data.data.accessToken));
-                setLoginSuccesful(true);
-                setTimeout(() => navigate("/"), 1000);
-            } else {
-                window.alert(data.response?.data?.msg || data.message);
-                setLoggingIn(false);
-            }
-        });
+        const response = await login(loginCredentials);
+
+        if (response.status === 200) {
+            dispatch(setAccessToken(response.data.accessToken));
+            dispatch(setUser(response.data.userData));
+            setLoginSuccesful(true);
+            setTimeout(() => navigate("/"), 1000);
+        } else {
+            window.alert(response.response?.data?.msg || response.response?.data.message);
+
+            setLoggingIn(false);
+        }
     };
 
     useEffect(() => {

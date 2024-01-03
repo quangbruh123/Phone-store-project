@@ -2,6 +2,7 @@ const Phone = require("../models/phone");
 const asyncHandler = require("express-async-handler");
 const createSlug = require("../utils/createSlug");
 const CustomAPIError = require("../error/customError");
+const deleteCloudinaryImage = require("../utils/deleteCloudinaryImage");
 
 const getAllPhone = asyncHandler(async (req, res) => {
 	const { name } = req.query;
@@ -13,9 +14,10 @@ const createPhone = asyncHandler(async (req, res) => {
 	const newPhone = await Phone.create({
 		...req.body,
 		slug: createSlug(req.body.phoneName),
-		thumb: req.files.thumb.path,
-		imageLinks: req.files.imageLinks.map((el) => el.path),
+		thumb: req.files?.thumb[0]?.path,
+		imageLinks: req.files?.imageLinks?.map((el) => el.path),
 	});
+
 	return res.status(201).json(newPhone);
 });
 
@@ -32,9 +34,27 @@ const getOnePhone = asyncHandler(async (req, res) => {
 const updatePhone = asyncHandler(async (req, res) => {
 	const { pid } = req.params;
 
+	const thumb = req.files.thumb[0];
+	const imageLinks = req.files.imageLinks;
+
+	const phone = await Phone.findById(pid);
+	if (!phone) {
+		throw new CustomAPIError(`Không có sản phẩm với id ${req.params.pid}`, 400);
+	}
+
+	if (thumb) {
+		await deleteCloudinaryImage(phone.thumb);
+	}
+
+	if (Array.isArray(imageLinks)) {
+		for (const imageLink of phone.imageLinks) {
+			await deleteCloudinaryImage(imageLink);
+		}
+	}
+
 	const updatedPhone = await Phone.findByIdAndUpdate(
 		pid,
-		{ ...req.body, slug: createSlug(req.body) },
+		{ ...req.body, slug: createSlug(req.body.phoneName), thumb: thumb.path, imageLinks: imageLinks.map((el) => el.path) },
 		{
 			runValidators: true,
 			new: true,
@@ -54,7 +74,7 @@ const deletePhone = asyncHandler(async (req, res) => {
 	const deletedProduct = await Phone.findByIdAndDelete(pid);
 
 	if (!deletedProduct) {
-		throw new NotFoundError("No product with that pid to delete");
+		throw new CustomAPIError("No product with that pid to delete", 400);
 	}
 
 	return res.status(204).send();
@@ -129,19 +149,19 @@ const rate = asyncHandler(async (req, res) => {
 	const { star, comment, pid } = req.body; // star với pid là bắt buộc, comment có hay không cũng đc
 
 	if (!star || !pid) {
-		throw new BadRequestError("Missing số sao & pid");
+		throw new CustomAPIError("Missing số sao & pid", 400);
 	}
 
-	const product = await Product.findById(pid);
+	const product = await Phone.findById(pid);
 
-	const review = product.ratings.find((rating) => {
+	const review = Phone.ratings.find((rating) => {
 		return rating.postedBy.toString() === _id;
 	}); // kiểm tra xem cái sản phẩm đó với user đó thì thằng đó đã đánh giá cho sản phẩm đó chưa
 
 	let updateReview;
 	if (review) {
 		// update star & comment
-		await Product.updateOne(
+		await Phone.updateOne(
 			{
 				$and: [{ _id: pid }, { ratings: { $elemMatch: review } }],
 			},
@@ -153,10 +173,10 @@ const rate = asyncHandler(async (req, res) => {
 			},
 			{ new: true }
 		);
-		updateReview = await Product.findById(pid);
+		updateReview = await Phone.findById(pid);
 	} else {
 		// create star & comment
-		updateReview = await Product.findByIdAndUpdate(
+		updateReview = await Phone.findByIdAndUpdate(
 			pid,
 			{
 				$push: { ratings: { star, comment, postedBy: _id } },

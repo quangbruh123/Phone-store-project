@@ -1,10 +1,11 @@
+const CustomAPIError = require("../error/customError");
 const User = require("../models/user");
 const asyncHandler = require("express-async-handler");
 
 const getAllUser = asyncHandler(async (req, res) => {
 	const queryObject = {};
 
-	const { name } = req.query;
+	const { name, field } = req.query;
 
 	// tìm các trường đơn giản cụ thể như là tìm tên, tìm hãng
 	if (name) {
@@ -12,14 +13,6 @@ const getAllUser = asyncHandler(async (req, res) => {
 	}
 
 	let result = User.find(queryObject);
-
-	// sort (có trừ đằng trước là từ lớn tới bé, k trừ thì từ bé đến lớn) sort=abc,-def
-	if (sort) {
-		const sortList = sort.split(",").join(" ");
-		result = result.sort(sortList);
-	} else {
-		result = result.sort("-createdAt");
-	}
 
 	// field limit (chọn trường để hiển thị)
 	if (field) {
@@ -55,7 +48,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 	const user = await User.findByIdAndDelete(uid);
 
 	if (!user) {
-		throw new NotFoundError(`No user with this id`);
+		throw new CustomAPIError(`No user with this id`, 400);
 	}
 	return res.status(204).send();
 });
@@ -63,7 +56,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 const updateUserByAdmin = asyncHandler(async (req, res) => {
 	const { uid } = req.params;
 	if (Object.keys(req.body) === 0 || !uid) {
-		throw new BadRequestError("Missing update info or user id");
+		throw new CustomAPIError("Missing update info or user id", 400);
 	}
 	const updatedUser = await User.findByIdAndUpdate(uid, req.body, {
 		runValidators: true,
@@ -71,7 +64,7 @@ const updateUserByAdmin = asyncHandler(async (req, res) => {
 	}).select("-password");
 
 	if (!updatedUser) {
-		throw new NotFoundError(`No user with id: ${id}`);
+		throw new CustomAPIError(`No user with id: ${id}`, 400);
 	}
 
 	return res.status(204).send();
@@ -81,10 +74,10 @@ const updateUser = asyncHandler(async (req, res) => {
 	const { _id } = req.user;
 
 	if (!_id) {
-		throw new BadRequestError("Missing user id");
+		throw new CustomAPIError("Missing user id", 400);
 	}
 	if (Object.keys(req.body) === 0) {
-		throw new BadRequestError("Missing inputs");
+		throw new CustomAPIError("Missing inputs", 400);
 	}
 	const updatedUser = await User.findByIdAndUpdate(id, req.body, {
 		runValidators: true,
@@ -92,7 +85,7 @@ const updateUser = asyncHandler(async (req, res) => {
 	}).select("-password -role -refreshToken");
 
 	if (!updatedUser) {
-		throw new NotFoundError(`No user with id: ${id}`);
+		throw new CustomAPIError(`No user with id: ${id}`, 400);
 	}
 
 	return res.status(200).json({
@@ -101,21 +94,74 @@ const updateUser = asyncHandler(async (req, res) => {
 	});
 });
 
-const getCurrentUser = asyncHandler(async (req, res, next) => {
+const getCurrentUser = asyncHandler(async (req, res) => {
 	const { _id } = req.user;
 
 	if (!_id) {
-		throw new BadRequestError("Missing user id");
+		throw new CustomAPIError("Missing user id", 400);
 	}
 	const currentUser = await User.findById(_id).select("-password -role -refreshToken");
 
 	if (!currentUser) {
-		throw new NotFoundError(`No user with id: ${id}`);
+		throw new CustomAPIError(`No user with id: ${id}`, 400);
 	}
 
-	res.locals.statusCode = 200;
-	res.locals.currentUser = currentUser;
-	next();
+	return res.status(200).json(currentUser);
 });
 
-module.exports = { getAllUser, getOneUser, getCurrentUser, updateUser, deleteUser };
+const updateCart = asyncHandler(async (req, res) => {
+	const { _id } = req.user;
+	const { pid, quantity = 1 } = req.body;
+
+	if (pid) {
+		throw new CustomAPIError("Missing phone id", 400);
+	}
+
+	const user = await User.findById(_id).select("cart");
+	const alreadyHave = user.cart.find((el) => el.product.toString() === pid);
+
+	let updateCart;
+
+	if (alreadyHave) {
+		updateCart = await User.updateOne(
+			{
+				$and: [{ _id: _id }, { cart: { $elemMatch: alreadyHave } }],
+			},
+			{
+				$set: {
+					"cart.$.quantity": quantity,
+				},
+			},
+			{ new: true, runValidators: true }
+		);
+	} else {
+		updateCart = await User.findByIdAndUpdate(_id, { $push: { cart: { product: pid, quantity } } }, { new: true, runValidators: true });
+	}
+
+	return res.status(204).send();
+});
+const removeProductInCart = asyncHandler(async (req, res) => {
+	const { _id } = req.user;
+	const { pid } = req.params;
+
+	if (pid) {
+		throw new CustomAPIError("Missing phone id", 400);
+	}
+
+	const user = await User.findById(_id).select("cart");
+
+	let updateCart = await User.findByIdAndUpdate(_id, { $pull: { cart: { product: pid } } }, { new: true, runValidators: true });
+
+	return res.status(204).send();
+});
+
+module.exports = {
+	getAllUser,
+	getOneUser,
+	getCurrentUser,
+	updateUser,
+	deleteUser,
+	updateUserByAdmin,
+	updateCart,
+	removeProductInCart,
+};

@@ -1,4 +1,7 @@
 import Cart from "../pages/Cart/Cart";
+import Wishlist from "../pages/Wistlist/Wishlist";
+import Profile from "../pages/Profile/Profile";
+import AdminPage from "../pages/AdminPage";
 const privateRoutes = [
     {
         path: "/cart",
@@ -6,7 +9,7 @@ const privateRoutes = [
     },
     {
         path: "/wishlist",
-        //   element: <Wishlist />,
+        element: <Wishlist />,
     },
     // {
     //     path: "/checkout",
@@ -18,7 +21,11 @@ const privateRoutes = [
     },
     {
         path: "/profile",
-        //   element: <Profile />,
+        element: <Profile />,
+    },
+    {
+        path: "/admin",
+        element: <AdminPage />,
     },
 ];
 export { privateRoutes };
