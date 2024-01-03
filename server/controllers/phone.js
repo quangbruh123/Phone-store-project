@@ -4,21 +4,23 @@ const createSlug = require("../utils/createSlug");
 const CustomAPIError = require("../error/customError");
 
 const getAllPhone = asyncHandler(async (req, res) => {
-	const phones = await Phone.find();
+	const { name } = req.query;
+	const page = req.query.page || 1;
+	const limit = req.query.limit || 10;
+	const skip = (page - 1) * limit;
+
+	const phones = await Phone.find({ ...name })
+		.skip(skip)
+		.limit(limit);
 	return res.status(200).json(phones);
 });
 
 const createPhone = asyncHandler(async (req, res) => {
-	const technicalSpecifications = {
-		lmao: 1,
-		"Màn hình": "500 inch",
-	};
 	const newPhone = await Phone.create({
 		...req.body,
 		slug: createSlug(req.body.phoneName),
 		thumb: req.files.thumb.path,
 		imageLinks: req.files.imageLinks.map((el) => el.path),
-		technicalSpecifications,
 	});
 	return res.status(201).json(newPhone);
 });

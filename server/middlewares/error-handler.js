@@ -3,7 +3,8 @@ const errorHandler = (err, req, res, next) => {
 		msg: err.message || "Something wrong",
 		statusCode: err.statusCode || 500,
 	};
-	return res.status(customError.statusCode).json(customError);
+	console.log(err);
+	return res.status(customError.statusCode).json(err);
 };
 
 module.exports = errorHandler;
