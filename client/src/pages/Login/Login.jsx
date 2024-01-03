@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { setAccessToken } from "../../store/authReducer";
+import { getAccessToken, setAccessToken } from "../../store/authReducer";
 import { login, apiLogin } from "../../api/auth";
 import bannerHero from "../../assets/bannerHero.jpg";
 import { Logo } from "../../component";
@@ -18,6 +18,8 @@ const Login = () => {
         password: "",
     });
 
+    const token = useSelector(getAccessToken);
+
     const [loggingIn, setLoggingIn] = useState(false);
 
     const [loginSuccessful, setLoginSuccesful] = useState(false);
@@ -30,13 +32,20 @@ const Login = () => {
                 console.log(data);
                 dispatch(setAccessToken(data.data.accessToken));
                 setLoginSuccesful(true);
-                setInterval(() => navigate("/"), 1000);
+                setTimeout(() => navigate("/"), 1000);
             } else {
                 window.alert(data.response?.data?.msg || data.message);
                 setLoggingIn(false);
             }
         });
     };
+
+    useEffect(() => {
+        if (token) {
+            navigate("/");
+        }
+    }, []);
+
     return (
         <main className='grid  grid-rows-1 lg:grid-cols-2 w-full  h-screen m-auto'>
             <section className=' hidden lg:block max-h-screen  rounded-lg'>
