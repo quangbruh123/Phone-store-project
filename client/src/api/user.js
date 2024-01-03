@@ -12,3 +12,16 @@ export const getCurrentUser = async () => {
         return error;
     }
 };
+
+export const updateUser = async (payload) => {
+    try {
+        const response = await axiosInstance({
+            method: "put",
+            url: "/user/:uid",
+            data: payload,
+        });
+        return response;
+    } catch (error) {
+        return error;
+    }
+};
