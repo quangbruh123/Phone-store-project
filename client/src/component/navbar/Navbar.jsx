@@ -3,7 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { BsBookmarkHeart } from "react-icons/bs";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { MdOutlineExplore } from "react-icons/md";
-import { useSelector } from "react-redux";
+import { FaCaretDown, FaUser } from "react-icons/fa";
+import { CiLogout } from "react-icons/ci";
+import { useSelector, useDispatch } from "react-redux";
 
 import { getQuantity } from "../../store/cartReducer";
 import { getCount } from "../../store/favoriteReducer";
@@ -11,7 +13,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import defaultUser from "../../assets/defaultUser.png";
 import MenuDropdown from "./MenuDropdown";
 import Logo from "./Logo";
-import { getAccessToken } from "../../store/authReducer";
+import { getAccessToken, getUserInfo, signOut } from "../../store/authReducer";
 // import {
 //   useAuthContext,
 //   useCartContext,
@@ -21,10 +23,19 @@ import { getAccessToken } from "../../store/authReducer";
 // import Search from "../filters/Search";
 
 const Navbar = () => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    // Biến lưu token của người dùng sau khi đăng nhập
     const token = useSelector(getAccessToken);
+    const userInfo = useSelector(getUserInfo);
+
+    // Biến lưu số lượng lưu trữ trong cart và wishlist
     const cartCount = useSelector(getQuantity);
     const favoriteCount = useSelector(getCount);
-    const navigate = useNavigate();
+
+    const [dropdown, setDropdown] = useState(false);
+
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [colorChange, setColorChange] = useState(false);
     const changeNavbarColor = () => {
@@ -55,14 +66,60 @@ const Navbar = () => {
                 <div className='hidden  sm:block sm:w-1/3 relative'>{/* <Search /> */}</div>
 
                 <section className='flex items-center'>
-                    <Link to='/profile'>
-                        <img
-                            className='rounded-full border-2  bg-yellow-300  hover:bg-yellow-500 cursor-pointer'
-                            src={defaultUser}
-                            alt='userProfileImage'
-                            width={40}
-                        />
-                    </Link>
+                    {token ? (
+                        <div
+                            className='flex gap-2 items-center relative cursor-pointer'
+                            onClick={() => {
+                                setDropdown(true);
+                            }}
+                        >
+                            <div className='flex items-center gap-1'>
+                                <div>Xin chào, </div>
+                                <div className='font-bold'>{userInfo.name}</div>
+                            </div>
+                            <FaCaretDown />
+                            <Link to='/profile'>
+                                <img
+                                    className='rounded-full border-2 bg-yellow-300 hover:bg-yellow-500 cursor-pointer'
+                                    src={defaultUser}
+                                    alt='userProfileImage'
+                                    width={40}
+                                />
+                            </Link>
+                            {dropdown && (
+                                <div
+                                    className='absolute top-12 bg-white overflow-clip rounded-lg shadow-lg w-[240px]'
+                                    onMouseLeave={() => {
+                                        setDropdown(false);
+                                    }}
+                                >
+                                    <div className='flex cursor-pointer items-center gap-4 px-5 py-4 hover:bg-gray-300' onClick={() => navigate("/profile")}>
+                                        <FaUser></FaUser>
+                                        <div>Thông tin tài khoản</div>
+                                    </div>
+                                    <div
+                                        className='flex cursor-pointer items-center gap-4 px-5 py-4 font-semibold text-red-600 hover:bg-gray-300'
+                                        onClick={() => {
+                                            dispatch(signOut());
+                                            navigate("/login");
+                                        }}
+                                    >
+                                        <CiLogout></CiLogout>
+                                        <div>Đăng xuất</div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <div
+                            className='cursor-pointer hover:bg-gray-100 text-amber-600 text-lg py-2 px-2 rounded-lg font-bold'
+                            onClick={() => {
+                                navigate("/login");
+                            }}
+                        >
+                            Đăng nhập
+                        </div>
+                    )}
 
                     <ul className=' hidden md:flex justify-between text-2xl ps-1'>
                         <li

@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import { getAccessToken, setAccessToken } from "../../store/authReducer";
+import { getAccessToken, setAccessToken, setUser } from "../../store/authReducer";
 import { login, apiLogin } from "../../api/auth";
 import bannerHero from "../../assets/bannerHero.jpg";
 import { Logo } from "../../component";
@@ -31,6 +31,7 @@ const Login = () => {
             if (data.status && data.status == 200) {
                 console.log(data);
                 dispatch(setAccessToken(data.data.accessToken));
+                dispatch(setUser(data.data.userData));
                 setLoginSuccesful(true);
                 setTimeout(() => navigate("/"), 1000);
             } else {
