@@ -5,13 +5,7 @@ const CustomAPIError = require("../error/customError");
 
 const getAllPhone = asyncHandler(async (req, res) => {
 	const { name } = req.query;
-	const page = req.query.page || 1;
-	const limit = req.query.limit || 10;
-	const skip = (page - 1) * limit;
-
-	const phones = await Phone.find({ ...name })
-		.skip(skip)
-		.limit(limit);
+	const phones = await Phone.find({ ...name });
 	return res.status(200).json(phones);
 });
 

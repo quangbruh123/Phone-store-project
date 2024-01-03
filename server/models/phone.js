@@ -70,5 +70,15 @@ const phoneSchema = new mongoose.Schema(
 	{ timestamps: true }
 );
 
+phoneSchema.pre("updateOne", async function (next) {
+	const update = this.getUpdate();
+	const newQuantity = update.$set && update.$set.quantity;
+
+	if (newQuantity !== undefined && newQuantity < 0) {
+		update.$set.quantity = 0;
+	}
+
+	next();
+});
 //Export the model
 module.exports = mongoose.model("Phone", phoneSchema);

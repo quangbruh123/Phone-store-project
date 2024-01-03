@@ -1,0 +1,47 @@
+[
+	{
+		"name": "Alice Johnson",
+		"email": "alice.johnson@example.com",
+		"phoneNumber": "1112223333",
+		"password": "samepassword123",
+		"role": "user",
+		"cart": [],
+		"wishlist": []
+	},
+	{
+		"name": "Bob Anderson",
+		"email": "bob.anderson@example.com",
+		"phoneNumber": "4445556666",
+		"password": "samepassword123",
+		"role": "user",
+		"cart": [],
+		"wishlist": []
+	},
+	{
+		"name": "Charlie Brown",
+		"email": "charlie.brown@example.com",
+		"phoneNumber": "7778889999",
+		"password": "samepassword123",
+		"role": "user",
+		"cart": [],
+		"wishlist": []
+	},
+	{
+		"name": "David Miller",
+		"email": "david.miller@example.com",
+		"phoneNumber": "1011121314",
+		"password": "samepassword123",
+		"role": "user",
+		"cart": [],
+		"wishlist": []
+	},
+	{
+		"name": "Eva Davis",
+		"email": "eva.davis@example.com",
+		"phoneNumber": "1516171819",
+		"password": "samepassword123",
+		"role": "user",
+		"cart": [],
+		"wishlist": []
+	}
+]
