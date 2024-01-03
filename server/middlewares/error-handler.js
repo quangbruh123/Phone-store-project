@@ -4,7 +4,13 @@ const errorHandler = (err, req, res, next) => {
 		statusCode: err.statusCode || 500,
 	};
 	console.log(err);
-	return res.status(customError.statusCode).json(err);
+	if (err.errors) {
+		customError.msg = Object.values(err.errors)
+			.map((item) => item.message)
+			.join(" ");
+		customError.statusCode = 400;
+	}
+	return res.status(customError.statusCode).json(customError);
 };
 
 module.exports = errorHandler;

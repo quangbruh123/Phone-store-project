@@ -2,6 +2,7 @@ const Phone = require("../models/phone");
 const asyncHandler = require("express-async-handler");
 const createSlug = require("../utils/createSlug");
 const CustomAPIError = require("../error/customError");
+const deleteCloudinaryImage = require("../utils/deleteCloudinaryImage");
 
 const getAllPhone = asyncHandler(async (req, res) => {
 	const { name } = req.query;
@@ -19,8 +20,8 @@ const createPhone = asyncHandler(async (req, res) => {
 	const newPhone = await Phone.create({
 		...req.body,
 		slug: createSlug(req.body.phoneName),
-		thumb: req.files.thumb.path,
-		imageLinks: req.files.imageLinks.map((el) => el.path),
+		thumb: req.files?.thumb?.path,
+		imageLinks: req.files?.imageLinks?.map((el) => el.path),
 	});
 	return res.status(201).json(newPhone);
 });
@@ -37,10 +38,26 @@ const getOnePhone = asyncHandler(async (req, res) => {
 
 const updatePhone = asyncHandler(async (req, res) => {
 	const { pid } = req.params;
+	const { thumb, imageLinks } = req.files;
+
+	const phone = await Phone.findById(pid);
+	if (!phone) {
+		throw new CustomAPIError(`Không có sản phẩm với id ${req.params.pid}`, 400);
+	}
+
+	if (thumb) {
+		await deleteCloudinaryImage(phone.thumb);
+	}
+
+	if (imageLinks) {
+		for (const imageLink of phone.imageLinks) {
+			await deleteCloudinaryImage(imageLink);
+		}
+	}
 
 	const updatedPhone = await Phone.findByIdAndUpdate(
 		pid,
-		{ ...req.body, slug: createSlug(req.body) },
+		{ ...req.body, slug: createSlug(req.body.phoneName) },
 		{
 			runValidators: true,
 			new: true,
