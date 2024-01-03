@@ -25,3 +25,14 @@ export const getOnePhone = async (pid) => {
         return error;
     }
 };
+
+export const rate = async (payload) => {
+    try {
+        const response = await axiosInstance({
+            method: "post",
+            url: "phone/rate",
+            data: payload,
+            withCredentials: true,
+        });
+    } catch (error) {}
+};
