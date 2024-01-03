@@ -22,7 +22,7 @@ const createPhone = asyncHandler(async (req, res) => {
 });
 
 const getOnePhone = asyncHandler(async (req, res) => {
-	const phone = await Phone.findById(req.params.pid);
+	const phone = await Phone.findById(req.params.pid).populate("ratings.postedBy", "name");
 
 	if (!phone) {
 		throw new CustomAPIError(`Không có sản phẩm với id ${req.params.pid}`, 400);
@@ -183,7 +183,7 @@ const rate = asyncHandler(async (req, res) => {
 		updateReview = await Phone.findByIdAndUpdate(
 			pid,
 			{
-				$push: { ratings: { star, comment, postedBy: _id } },
+				$push: { ratings: { star, comment, postedBy: _id, createdAt: Date.now() } },
 			},
 			{ new: true, runValidators: true }
 		);
@@ -197,5 +197,15 @@ const rate = asyncHandler(async (req, res) => {
 
 	return res.status(204).send();
 });
+const removeRating = asyncHandler(async (req, res) => {
+	const { _id } = req.user;
+	const { pid } = req.body;
 
-module.exports = { getAllPhone, getFilterProduct, getOnePhone, createPhone, updatePhone, deletePhone, rate };
+	if (!pid) {
+		throw new CustomAPIError("Missing phone id", 400);
+	}
+	await Phone.findByIdAndUpdate(pid, { $pull: { ratings: { postedBy: _id } } }, { new: true, runValidators: true });
+
+	return res.status(204).send();
+});
+module.exports = { getAllPhone, getFilterProduct, getOnePhone, createPhone, updatePhone, deletePhone, rate, removeRating };

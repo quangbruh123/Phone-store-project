@@ -56,6 +56,7 @@ const phoneSchema = new mongoose.Schema(
 				star: { type: Number },
 				postedBy: { type: mongoose.Types.ObjectId, ref: "User" },
 				comment: String,
+				createdAt: Date,
 			},
 		],
 		quantity: {

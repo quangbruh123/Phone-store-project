@@ -111,9 +111,9 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 
 const updateCart = asyncHandler(async (req, res) => {
 	const { _id } = req.user;
-	const { pid, quantity = 1 } = req.body;
+	const { pid, quantity = 1, phoneStorage, price, thumb } = req.body;
 
-	if (pid) {
+	if (!pid) {
 		throw new CustomAPIError("Missing phone id", 400);
 	}
 
@@ -130,27 +130,29 @@ const updateCart = asyncHandler(async (req, res) => {
 			{
 				$set: {
 					"cart.$.quantity": quantity,
+					"cart.$.phoneStorage": phoneStorage,
 				},
 			},
 			{ new: true, runValidators: true }
 		);
 	} else {
-		updateCart = await User.findByIdAndUpdate(_id, { $push: { cart: { product: pid, quantity } } }, { new: true, runValidators: true });
+		updateCart = await User.findByIdAndUpdate(
+			_id,
+			{ $push: { cart: { product: pid, quantity, phoneStorage, price, thumb } } },
+			{ new: true, runValidators: true }
+		);
 	}
 
 	return res.status(204).send();
 });
 const removeProductInCart = asyncHandler(async (req, res) => {
 	const { _id } = req.user;
-	const { pid } = req.params;
+	const { pid } = req.body;
 
-	if (pid) {
+	if (!pid) {
 		throw new CustomAPIError("Missing phone id", 400);
 	}
-
-	const user = await User.findById(_id).select("cart");
-
-	let updateCart = await User.findByIdAndUpdate(_id, { $pull: { cart: { product: pid } } }, { new: true, runValidators: true });
+	await User.findByIdAndUpdate(_id, { $pull: { cart: { product: pid } } }, { new: true, runValidators: true });
 
 	return res.status(204).send();
 });

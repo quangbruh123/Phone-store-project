@@ -4,11 +4,7 @@ const { getAllUser, getCurrentUser, getOneUser, updateUser, deleteUser, updateUs
 const { checkIsStaffOrAdmin, verifyAccessToken, checkIsUser } = require("../middlewares/verifyToken");
 
 router.route("/").get(getAllUser);
-router
-	.route("/current")
-	.get(verifyAccessToken, getCurrentUser)
-	.put(verifyAccessToken, checkIsUser, updateCart)
-	.delete(verifyAccessToken, checkIsUser, removeProductInCart); //verifyToken
+router.route("/current").get(verifyAccessToken, getCurrentUser).put(verifyAccessToken, updateCart).delete(verifyAccessToken, removeProductInCart); //verifyToken
 router
 	.route("/:uid")
 	.get(verifyAccessToken, getOneUser)

@@ -1,5 +1,5 @@
 const express = require("express");
-const { getAllPhone, getFilterProduct, getOnePhone, createPhone, updatePhone, deletePhone, rate } = require("../controllers/phone");
+const { getAllPhone, getFilterProduct, getOnePhone, createPhone, updatePhone, deletePhone, rate, removeRating } = require("../controllers/phone");
 const { verifyAccessToken, checkIsStaffOrAdmin, checkIsUser } = require("../middlewares/verifyToken");
 const uploadCloud = require("../config/cloudinary");
 const router = express.Router();
@@ -22,5 +22,5 @@ router
 	.get(verifyAccessToken, getOnePhone)
 	.put(verifyAccessToken, checkIsStaffOrAdmin, updatePhone)
 	.delete(verifyAccessToken, checkIsStaffOrAdmin, deletePhone);
-router.route("/rate").post(verifyAccessToken, checkIsUser, rate);
+router.route("/rate").post(verifyAccessToken, checkIsUser, rate).delete(verifyAccessToken, checkIsUser, removeRating);
 module.exports = router;
