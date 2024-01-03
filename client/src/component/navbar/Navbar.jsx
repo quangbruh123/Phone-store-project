@@ -75,7 +75,7 @@ const Navbar = () => {
                         >
                             <div className='flex items-center gap-1'>
                                 <div>Xin chào, </div>
-                                <div className='font-bold'>{userInfo.name}</div>
+                                <div className='font-bold'>{userInfo?.name}</div>
                             </div>
                             <FaCaretDown />
                             <Link to='/profile'>

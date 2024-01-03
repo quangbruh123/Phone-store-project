@@ -19,7 +19,7 @@ const Cart = () => {
                 <div className='md:grid md:grid-cols-3 gap-5'>
                     <main className='md:col-span-2'>
                         {cartItems.map((product, idx) => (
-                            <CartItemCard product={product} index={idx} />
+                            <CartItemCard key={idx} product={product} index={idx} />
                         ))}
                     </main>
                     <CartTotalCard cart={cartItems} />

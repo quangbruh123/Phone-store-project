@@ -1,17 +1,5 @@
 import axiosInstance from "./axiosConfig";
 
-export const getAllPhone = async () => {
-    try {
-        const response = await axiosInstance({
-            method: "get",
-            url: "/phone",
-        });
-        return response;
-    } catch (error) {
-        return error;
-    }
-};
-
 export const getFilterProduct = async (query) => {
     try {
         const response = await axiosInstance({
