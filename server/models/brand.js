@@ -11,4 +11,4 @@ var brandSchema = new mongoose.Schema({
 });
 
 //Export the model
-module.exports = mongoose.model("User", brandSchema);
+module.exports = mongoose.model("Brand", brandSchema);

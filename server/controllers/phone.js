@@ -197,6 +197,7 @@ const rate = asyncHandler(async (req, res) => {
 
 	return res.status(204).send();
 });
+
 const removeRating = asyncHandler(async (req, res) => {
 	const { _id } = req.user;
 	const { pid } = req.body;
@@ -204,8 +205,11 @@ const removeRating = asyncHandler(async (req, res) => {
 	if (!pid) {
 		throw new CustomAPIError("Missing phone id", 400);
 	}
-	await Phone.findByIdAndUpdate(pid, { $pull: { ratings: { postedBy: _id } } }, { new: true, runValidators: true });
+	const updated = await Phone.findByIdAndUpdate(pid, { $pull: { ratings: { postedBy: _id } } }, { new: true, runValidators: true });
 
+	if (!updated) {
+		throw new CustomAPIError("Không có phone id này trong db", 400);
+	}
 	return res.status(204).send();
 });
 module.exports = { getAllPhone, getFilterProduct, getOnePhone, createPhone, updatePhone, deletePhone, rate, removeRating };

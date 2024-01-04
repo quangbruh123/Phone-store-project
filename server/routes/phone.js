@@ -20,7 +20,15 @@ router.route("/filter").get(getFilterProduct);
 router
 	.route("/:pid")
 	.get(verifyAccessToken, getOnePhone)
-	.put(verifyAccessToken, checkIsStaffOrAdmin, updatePhone)
+	.put(
+		verifyAccessToken,
+		checkIsStaffOrAdmin,
+		uploadCloud.fields([
+			{ name: "thumb", maxCount: 1 },
+			{ name: "imageLinks", maxCount: 10 },
+		]),
+		updatePhone
+	)
 	.delete(verifyAccessToken, checkIsStaffOrAdmin, deletePhone);
 router.route("/rate").post(verifyAccessToken, checkIsUser, rate).delete(verifyAccessToken, checkIsUser, removeRating);
 module.exports = router;

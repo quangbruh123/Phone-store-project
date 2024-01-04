@@ -2,6 +2,7 @@ const Order = require("../models/order");
 const User = require("../models/user");
 const Coupon = require("../models/coupon");
 const asyncHandler = require("express-async-handler");
+const CustomAPIError = require("../error/customError");
 
 const createOrder = asyncHandler(async (req, res) => {
 	const { _id } = req.user;
@@ -41,8 +42,11 @@ const createOrder = asyncHandler(async (req, res) => {
 const updateStatus = asyncHandler(async (req, res) => {
 	const { status, oid } = req.body;
 
-	await Order.findByIdAndUpdate(oid, { status, dateProceeded: Date.now() }, { new: true });
+	const updated = await Order.findByIdAndUpdate(oid, { status, dateProceeded: Date.now() }, { new: true });
 
+	if (!updated) {
+		throw new CustomAPIError("No order with that id", 400);
+	}
 	return res.status(204).send();
 });
 
