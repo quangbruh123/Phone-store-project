@@ -156,6 +156,17 @@ const removeProductInCart = asyncHandler(async (req, res) => {
 
 	return res.status(204).send();
 });
+const replaceNewCart = asyncHandler(async (req, res) => {
+	const { _id } = req.user;
+	const { pid, newCart } = req.body;
+
+	if (!pid) {
+		throw new CustomAPIError("Missing phone id", 400);
+	}
+
+	await User.findByIdAndUpdate(_id, { cart: newCart }, { new: true, runValidators: true });
+	return res.status(204).send();
+});
 
 module.exports = {
 	getAllUser,
@@ -166,4 +177,5 @@ module.exports = {
 	updateUserByAdmin,
 	updateCart,
 	removeProductInCart,
+	replaceNewCart,
 };
