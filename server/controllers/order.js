@@ -62,9 +62,7 @@ const getUserOrder = asyncHandler(async (req, res) => {
 const getAllOrder = asyncHandler(async (req, res) => {
 	const orders = await Order.find().populate("coupon").populate("orderBy", "firstName lastName");
 
-	return res.status(200).json({
-		orders,
-	});
+	return res.status(200).json(orders);
 });
 
 module.exports = {
