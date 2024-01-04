@@ -135,7 +135,7 @@ const getFilterProduct = asyncHandler(async (req, res) => {
 	const limit = Number(req.query.limit) || 10;
 	const skip = (page - 1) * limit; // thí dụ mình muốn xem page thứ 2 tức là sản phẩm thứ 10 đến thứ 19 thì mình phải đếm skip tới số 10 bằng cách lấy page - 1 * limit
 
-	const totalDoc = await result.countDocuments();
+	const totalDoc = await Phone.find(queryObject).countDocuments();
 	const totalPage = Math.ceil(totalDoc / limit);
 
 	result = result.skip(skip).limit(limit);
