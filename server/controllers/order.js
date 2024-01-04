@@ -39,14 +39,11 @@ const createOrder = asyncHandler(async (req, res) => {
 });
 
 const updateStatus = asyncHandler(async (req, res) => {
-	const { oid } = req.params;
-	const { status } = req.body;
+	const { status, oid } = req.body;
 
-	const order = await Order.findByIdAndUpdate(oid, { status }, { new: true });
+	await Order.findByIdAndUpdate(oid, { status, dateProceeded: Date.now() }, { new: true });
 
-	return res.status(201).json({
-		order,
-	});
+	return res.status(204).send();
 });
 
 const getUserOrder = asyncHandler(async (req, res) => {
@@ -60,7 +57,8 @@ const getUserOrder = asyncHandler(async (req, res) => {
 });
 
 const getAllOrder = asyncHandler(async (req, res) => {
-	const orders = await Order.find().populate("coupon").populate("orderBy", "name");
+	const { status = "Pending" } = req.query;
+	const orders = await Order.find({ status }).populate("coupon").populate("orderBy", "name");
 
 	return res.status(200).json(orders);
 });
