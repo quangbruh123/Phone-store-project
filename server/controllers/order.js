@@ -1,21 +1,23 @@
 const Order = require("../models/order");
-const Product = require("../models/product");
 const User = require("../models/user");
 const Coupon = require("../models/coupon");
 const asyncHandler = require("express-async-handler");
+const CustomAPIError = require("../error/customError");
 
 const createOrder = asyncHandler(async (req, res) => {
 	const { _id } = req.user;
 	const { couponId } = req.body;
-	const user = await User.findById(_id).select("cart").populate("cart.product", "title price");
+	const user = await User.findById(_id).select("cart").populate("cart.product", "phoneName price");
 	const products = user.cart.map((obj) => {
+		console.log(obj);
 		return {
-			productId: obj.product._id,
+			productId: obj.product._id.toString(),
 			quantity: obj.quantity,
+			phoneStorage: obj.phoneStorage,
 		};
 	});
 	let totalCost = user.cart.reduce((prev, current) => {
-		return current.product.price * current.quantity + prev;
+		return current.price * current.quantity + prev;
 	}, 0);
 
 	let coupon = null;
@@ -29,23 +31,23 @@ const createOrder = asyncHandler(async (req, res) => {
 	const newOrder = await Order.create({
 		products,
 		total: totalCost,
-		coupon: coupon._id,
+		coupon: coupon?._id,
 		orderBy: _id,
 	});
-	return res.status(StatusCodes.CREATED).json({
+	return res.status(201).json({
 		newOrder,
 	});
 });
 
 const updateStatus = asyncHandler(async (req, res) => {
-	const { oid } = req.params;
-	const { status } = req.body;
+	const { status, oid } = req.body;
 
-	const order = await Order.findByIdAndUpdate(oid, { status }, { new: true });
+	const updated = await Order.findByIdAndUpdate(oid, { status, dateProceeded: Date.now() }, { new: true });
 
-	return res.status(201).json({
-		order,
-	});
+	if (!updated) {
+		throw new CustomAPIError("No order with that id", 400);
+	}
+	return res.status(204).send();
 });
 
 const getUserOrder = asyncHandler(async (req, res) => {
@@ -59,11 +61,10 @@ const getUserOrder = asyncHandler(async (req, res) => {
 });
 
 const getAllOrder = asyncHandler(async (req, res) => {
-	const orders = await Order.find().populate("coupon").populate("orderBy", "firstName lastName");
+	const { status = "Pending" } = req.query;
+	const orders = await Order.find({ status }).populate("coupon").populate("orderBy", "name");
 
-	return res.status(StatusCodes.OK).json({
-		orders,
-	});
+	return res.status(200).json(orders);
 });
 
 module.exports = {

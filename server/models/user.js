@@ -46,16 +46,16 @@ const userSchema = new mongoose.Schema({
 	},
 	cart: [
 		{
-			product: { type: mongoose.Types.ObjectId, ref: "Product" },
+			product: { type: mongoose.Types.ObjectId, ref: "Phone" },
 			quantity: Number,
 			phoneStorage: String,
-			price: Number,
+			price: { type: Number, default: 1000 },
 		},
 	],
 	wishlist: [
 		{
 			type: mongoose.Types.ObjectId,
-			ref: "Product",
+			ref: "Phone",
 		},
 	],
 	isBlocked: {

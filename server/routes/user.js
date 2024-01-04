@@ -9,6 +9,7 @@ const {
   updateUserByAdmin,
   updateCart,
   removeProductInCart,
+  replaceNewCart,
 } = require('../controllers/user');
 const {
   checkIsStaffOrAdmin,
@@ -21,7 +22,7 @@ router
   .route('/current')
   .get(verifyAccessToken, getCurrentUser)
   .put(verifyAccessToken, updateCart)
-  .delete(verifyAccessToken, removeProductInCart); //verifyToken
+  .delete(verifyAccessToken, replaceNewCart); //verifyToken
 router
   .route('/:uid')
   .get(verifyAccessToken, getOneUser)
@@ -30,4 +31,5 @@ router
 router
   .route('/admin/:uid')
   .put(verifyAccessToken, checkIsStaffOrAdmin, updateUserByAdmin);
+
 module.exports = router;

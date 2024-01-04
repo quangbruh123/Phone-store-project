@@ -4,14 +4,15 @@ const mongoose = require("mongoose"); // Erase if already required
 const orderSchema = new mongoose.Schema({
 	products: [
 		{
-			productId: { type: mongoose.Types.ObjectId, ref: "Product" },
+			productId: { type: mongoose.Types.ObjectId, ref: "Phone" },
 			quantity: Number,
+			phoneStorage: String,
 		},
 	],
 	status: {
 		type: String,
-		default: "Processing",
-		unique: ["Canceled", "Processing", "Successed"],
+		default: "Pending",
+		enum: ["Rejected", "Pending", "Accepted"],
 	},
 	paymentIntent: {},
 	total: Number,
@@ -23,7 +24,11 @@ const orderSchema = new mongoose.Schema({
 		type: mongoose.Types.ObjectId,
 		ref: "User",
 	},
+	dateProceeded: Date,
+	dateCreated: {
+		type: Date,
+		default: Date.now(),
+	},
 });
-
 //Export the model
 module.exports = mongoose.model("Order", orderSchema);
