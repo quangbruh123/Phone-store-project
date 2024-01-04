@@ -4,7 +4,7 @@ import { BsBookmarkHeart, BsFillBookmarkHeartFill } from "react-icons/bs";
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 
-import { cartItemIncrement, cartItemDecrement } from "../../store/cartReducer";
+import { cartItemIncrement, cartItemDecrement, removeCartItems } from "../../store/cartReducer";
 
 const CartItemCard = ({ product, isSearch, setSearch, index }) => {
     const dispatch = useDispatch();
@@ -59,9 +59,9 @@ const CartItemCard = ({ product, isSearch, setSearch, index }) => {
                                         className='btn-rounded-secondary  text-xs sm:text-sm mt-2 max-w-xs disabled:cursor-not-allowed'
                                         // disabled={disableCart}
                                         disabled={false}
-                                        // onClick={() => deleteProductFromCart(product._id)}
+                                        onClick={() => dispatch(removeCartItems(index))}
                                     >
-                                        Remove from Bag
+                                        Xóa khỏi giỏ hàng
                                     </button>
                                     <button
                                         className='disabled:cursor-not-allowed'

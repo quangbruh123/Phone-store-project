@@ -14,13 +14,7 @@ import defaultUser from "../../assets/defaultUser.png";
 import MenuDropdown from "./MenuDropdown";
 import Logo from "./Logo";
 import { getAccessToken, getUserInfo, signOut } from "../../store/authReducer";
-// import {
-//   useAuthContext,
-//   useCartContext,
-//   useWishlistContext,
-// } from "../../contexts";
-
-// import Search from "../filters/Search";
+import Search from "../filters/Search";
 
 const Navbar = () => {
     const navigate = useNavigate();
@@ -63,7 +57,9 @@ const Navbar = () => {
                 <section className='relative flex items-center'>
                     <Logo />
                 </section>
-                <div className='hidden  sm:block sm:w-1/3 relative'>{/* <Search /> */}</div>
+                <div className='hidden  sm:block sm:w-1/3 relative'>
+                    <Search />
+                </div>
 
                 <section className='flex items-center'>
                     {token ? (

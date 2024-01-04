@@ -9,8 +9,8 @@ const Comments = ({ info }) => {
                 <BiUserCircle></BiUserCircle>
             </div>
             <div className='w-[85%]'>
-                <div className='text-sm'>Cấn Văn Lực</div>
-                <div className='text-sm text-gray-500'>Ngày bình luận: 17/10/2023</div>
+                <div className='text-sm'>{info?.postedBy?.name}</div>
+                <div className='text-sm text-gray-500'>Ngày bình luận: 06/01/2024</div>
                 <div className='mt-3'>{info?.comment}</div>
             </div>
             <div className='flex items-center gap-1 font-semibold'>

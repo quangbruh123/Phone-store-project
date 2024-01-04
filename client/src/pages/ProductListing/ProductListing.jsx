@@ -1,25 +1,37 @@
 import { BiFilter } from "react-icons/bi";
 import { MdKeyboardArrowUp } from "react-icons/md";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router";
 
+import Pagination from "../../component/pagination/Pagination";
 import bannerImg from "../../assets/bannerHero.jpg";
 import loadingGif from "../../assets/loading.gif";
-
 import { Filters, SortBy, SingleProduct } from "../../component";
-
-// import { useProductsContext } from "../contexts";
-import { useEffect, useState } from "react";
-// import { useFilter } from "../hooks/filtersHook";
-import { useLocation } from "react-router";
 
 import useFetchDataForObject from "../../utils/useFetchDataForObject";
 
 const ProductListing = () => {
     const location = useLocation();
+
+    const [query, setQuery] = useState({
+        phoneName: "",
+        brand: "",
+        sort: "",
+        limit: 12,
+    });
+
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [showScrollArrow, setShowScrollArrow] = useState(false);
     const [productList, setProductList] = useState([]);
 
-    const { data, isLoading, error } = useFetchDataForObject("/phone/filter", null);
+    const [page, setPage] = useState(1);
+    const handleChangePage = (num) => {
+        setPage((prev) => {
+            return prev + num;
+        });
+    };
+
+    const { data, isLoading, error } = useFetchDataForObject("/phone/filter", query);
 
     // const { loading } = useProductsContext();
     // const productsList = useFilter();
@@ -53,6 +65,15 @@ const ProductListing = () => {
     useEffect(() => {
         setProductList(data?.products);
     }, [data]);
+
+    useEffect(() => {
+        setQuery((prev) => {
+            return {
+                ...prev,
+                page: page,
+            };
+        });
+    }, [page]);
 
     return (
         <>
@@ -95,7 +116,7 @@ const ProductListing = () => {
                     ) : (
                         <p className='font-sans text-4xl  font-bold uppercase  tracking-wide text-gray-300 text-center w-full py-32'>Không có sản phẩm!</p>
                     )}
-
+                    <Pagination currentPage={page} totalPage={10} setBackPage={() => handleChangePage(-1)} setNextPage={() => handleChangePage(1)}></Pagination>
                     <button
                         className={` fixed bottom-10 bg-gray-800 right-2 p-2 rounded-full text-xl shadow-2xl transition-all delay-100 ease-in-out ${
                             showScrollArrow ? "block" : "hidden"

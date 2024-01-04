@@ -33,22 +33,25 @@ const SingleProduct = ({ product }) => {
 
     return (
         <div
-            className='flex flex-col xs:flex-row sm:flex-col  bg-white/[0.5] rounded-lg shadow-md border-2 border-black/[0.05] overflow-hidden
+            className='flex flex-col xs:flex-row sm:flex-col bg-white/[0.5] rounded-lg shadow-md border-2 border-black/[0.05] overflow-hidden
       cursor-pointer
       transition-transform
-      hover:scale-[1.02] hover:shadow-lg'
+      hover:scale-[1.02] hover:shadow-lg justify-between'
         >
-            <div className='w-full h-[190px] py-2 px-3' onClick={() => navigate(`/product/${product?._id}/${product?.slug}`)}>
-                <img src={product?.imageLinks[0]} className='w-[100%] h-[100%]'></img>
-            </div>
-            <div className='p-3 border-b-[1px] border-gray-200'>
-                <div className='font-semibold text-xl'>{product?.phoneName}</div>
-                <div className='flex gap-2 items-center'>
-                    <div className='text-amber-600 font-bold py-3'>{string.toLocaleString("vi-VN")}₫</div>
-                    {/* <div className='text-gray-500 font-bold line-through py-3'>Gía giảm</div> */}
+            <div className='flex flex-col'>
+                <div className='w-full h-[190px] py-2 px-3' onClick={() => navigate(`/product/${product?._id}/${product?.slug}`)}>
+                    <img src={product?.imageLinks[0]} className='w-[100%] h-[100%]'></img>
+                </div>
+                <div className='p-3'>
+                    <div className='font-semibold text-xl line-clamp-2'>{product?.phoneName}</div>
+                    <div className='flex gap-2 items-center'>
+                        <div className='text-amber-600 font-bold py-3'>{string.toLocaleString("vi-VN")}₫</div>
+                        {/* <div className='text-gray-500 font-bold line-through py-3'>Gía giảm</div> */}
+                    </div>
                 </div>
             </div>
-            <div className='flex items-center justify-between py-4 w-full'>
+
+            <div className='flex items-center justify-between py-4 w-full border-t-[1px] border-gray-200'>
                 <div className='flex gap-1'>
                     <GiRoundStar className='text-yellow-400 ml-3 mt-[2px]'></GiRoundStar>
                     {product?.avgRating}
