@@ -49,7 +49,8 @@ const userSchema = new mongoose.Schema({
 			product: { type: mongoose.Types.ObjectId, ref: "Phone" },
 			quantity: Number,
 			phoneStorage: String,
-			price: { type: Number, default: 1000 },
+			thumb: String,
+			price: Number,
 		},
 	],
 	wishlist: [
