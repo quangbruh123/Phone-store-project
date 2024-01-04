@@ -11,8 +11,8 @@ const orderSchema = new mongoose.Schema({
 	],
 	status: {
 		type: String,
-		default: "Processing",
-		unique: ["Canceled", "Processing", "Successed"],
+		default: "Pending",
+		enum: ["Rejected", "Pending", "Accepted"],
 	},
 	paymentIntent: {},
 	total: Number,

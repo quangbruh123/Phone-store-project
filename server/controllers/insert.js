@@ -60,4 +60,9 @@ const insertOrder = asyncHandler(async (req, res) => {
 
 	return res.status(201).json("oke");
 });
-module.exports = { insertPhones, insertAccount, insertOrder };
+
+const change = asyncHandler(async (req, res) => {
+	const orders = await Order.updateMany({ status: "Processing" }, { status: "Pending" }, { new: true });
+	return res.status(204).json(orders);
+});
+module.exports = { insertPhones, insertAccount, insertOrder, change };
