@@ -34,5 +34,7 @@ export const rate = async (payload) => {
             data: payload,
             withCredentials: true,
         });
-    } catch (error) {}
+    } catch (error) {
+        return error;
+    }
 };
