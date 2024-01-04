@@ -54,7 +54,12 @@ const updatePhone = asyncHandler(async (req, res) => {
 
 	const updatedPhone = await Phone.findByIdAndUpdate(
 		pid,
-		{ ...req.body, slug: createSlug(req.body.phoneName), thumb: thumb.path, imageLinks: imageLinks.map((el) => el.path) },
+		{
+			...req.body,
+			slug: createSlug(req.body.phoneName),
+			thumb: thumb.path,
+			imageLinks: imageLinks.map((el) => el.path),
+		},
 		{
 			runValidators: true,
 			new: true,
@@ -187,7 +192,9 @@ const rate = asyncHandler(async (req, res) => {
 		updateReview = await Phone.findByIdAndUpdate(
 			pid,
 			{
-				$push: { ratings: { star, comment, postedBy: _id, createdAt: Date.now() } },
+				$push: {
+					ratings: { star, comment, postedBy: _id, createdAt: Date.now() },
+				},
 			},
 			{ new: true, runValidators: true }
 		);
@@ -216,4 +223,13 @@ const removeRating = asyncHandler(async (req, res) => {
 	}
 	return res.status(204).send();
 });
-module.exports = { getAllPhone, getFilterProduct, getOnePhone, createPhone, updatePhone, deletePhone, rate, removeRating };
+module.exports = {
+	getAllPhone,
+	getFilterProduct,
+	getOnePhone,
+	createPhone,
+	updatePhone,
+	deletePhone,
+	rate,
+	removeRating,
+};

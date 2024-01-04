@@ -23,6 +23,7 @@ const ProductListing = () => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [showScrollArrow, setShowScrollArrow] = useState(false);
     const [productList, setProductList] = useState([]);
+    const [totalPage, setTotalPage] = useState(0);
 
     const [page, setPage] = useState(1);
     const handleChangePage = (num) => {
@@ -63,7 +64,9 @@ const ProductListing = () => {
     }, []);
 
     useEffect(() => {
+        console.log(data);
         setProductList(data?.products);
+        setTotalPage(data?.totalPage);
     }, [data]);
 
     useEffect(() => {
@@ -116,7 +119,12 @@ const ProductListing = () => {
                     ) : (
                         <p className='font-sans text-4xl  font-bold uppercase  tracking-wide text-gray-300 text-center w-full py-32'>Không có sản phẩm!</p>
                     )}
-                    <Pagination currentPage={page} totalPage={10} setBackPage={() => handleChangePage(-1)} setNextPage={() => handleChangePage(1)}></Pagination>
+                    <Pagination
+                        currentPage={page}
+                        totalPage={totalPage}
+                        setBackPage={() => handleChangePage(-1)}
+                        setNextPage={() => handleChangePage(1)}
+                    ></Pagination>
                     <button
                         className={` fixed bottom-10 bg-gray-800 right-2 p-2 rounded-full text-xl shadow-2xl transition-all delay-100 ease-in-out ${
                             showScrollArrow ? "block" : "hidden"

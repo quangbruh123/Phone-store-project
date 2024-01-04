@@ -1,10 +1,11 @@
-import emptyBag from "../../assets/empty-shopping-bag.png";
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+
+import emptyBag from "../../assets/empty-shopping-bag.png";
 import CartTotalCard from "../../component/cart/CartTotalCard";
 import { CartItemCard } from "../../component";
 import { getQuantity, getCartItems, removeCartItems } from "../../store/cartReducer";
-import { useEffect, useState } from "react";
 
 const Cart = () => {
     const navigate = useNavigate();
@@ -15,14 +16,17 @@ const Cart = () => {
     return (
         <div className='py-2 '>
             {cartCount > 0 && (
-                <h1
-                    className='text-2xl font-bold p-3'
-                    onClick={() => {
-                        console.log(cartItems);
-                    }}
-                >
-                    Giỏ hàng({cartCount})
-                </h1>
+                <div className='flex gap-3 mb-2'>
+                    <h1
+                        className='text-2xl font-bold p-3'
+                        onClick={() => {
+                            console.log(cartItems);
+                        }}
+                    >
+                        Giỏ hàng({cartCount})
+                    </h1>
+                    <div className='px-3 rounded-lg border flex items-center cursor-pointer hover:bg-gray-200'>Lưu giỏ hàng</div>
+                </div>
             )}
             {cartCount != 0 ? (
                 <div className='md:grid md:grid-cols-3 gap-5'>
