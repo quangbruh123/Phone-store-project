@@ -7,19 +7,16 @@ import { createPhone } from "../../../api/item.js";
 export default function AddItemModal() {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const editorRef = useRef(null);
-
-    // const log = () => {
-    //     if (editorRef.current) {
-    //         console.log(editorRef.current.getContent());
-    //     }
-    // };
+    // const [imageLinksInput, setImageLinkInput] = useState([]);
     const [payload, setPayload] = useState({});
     const handleSubmit = () => {
         const formData = new FormData();
-        // const mapSpec = new Map();
-        // const map = new Map([...Object.entries(payload.technicalSpecifications)]);
-        // console.log(map);
-        const finStorage = payload.storageString.split(",");
+        // // for (let i = 0; i < imageLinksInput.length; i++) {
+        // //     formData.append("imageLinks", imageLinksInput[i]);
+        // // }
+
+        const finStorage = payload.storageString?.split(",");
+
         setPayload((prev) => {
             return {
                 ...prev,
@@ -27,25 +24,28 @@ export default function AddItemModal() {
             };
         });
         for (const [key, value] of Object.entries(payload)) {
-            if (Array.isArray(value)) {
-                for (const element of value) {
-                    formData.append(key, element);
-                }
+            if (key == "thumb") {
+                formData.append(key, value);
             } else {
-                if (typeof value === "object") {
-                    formData.append(key, JSON.stringify(value));
+                if (Array.isArray(value)) {
+                    for (const element of value) {
+                        formData.append(key, element);
+                    }
                 } else {
-                    formData.append(key, value);
+                    if (typeof value === "object") {
+                        formData.append(key, JSON.stringify(value));
+                    } else {
+                        formData.append(key, value);
+                    }
                 }
             }
         }
 
-        for (const [key, value] of formData.entries()) {
-            console.log(key, ":", value);
-        }
-        // createPhone(formData).then(() => {
-        //     console.log("create thanfh cong");
-        // });
+        console.log(formData);
+        createPhone(formData).then(() => {
+            console.log("create thanfh cong");
+        });
+        // console.log(payload);
     };
     useEffect(() => {
         // console.log(payload);
@@ -278,7 +278,8 @@ export default function AddItemModal() {
                                         for (let i = 0; i < e.target.files.length; i++) {
                                             temp.push(e.target.files[i]);
                                         }
-                                        console.log(temp);
+                                        // console.log(temp);
+                                        // setImageLinkInput(temp);
                                         setPayload((prev) => {
                                             return {
                                                 ...prev,
@@ -306,12 +307,7 @@ export default function AddItemModal() {
                                 <Button color='danger' variant='flat' onPress={onClose}>
                                     Đóng
                                 </Button>
-                                <Button
-                                    color='primary'
-                                    onPress={() => {
-                                        handleSubmit();
-                                    }}
-                                >
+                                <Button color='primary' onPress={handleSubmit}>
                                     Thêm
                                 </Button>
                             </ModalFooter>

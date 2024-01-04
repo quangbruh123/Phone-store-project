@@ -7,7 +7,7 @@ function FunctionTabs() {
     return (
         <div className='bg-section-blue m-4'>
             <Tabs aria-label='Options' className='inline my-6' variant='light' color='primary' size='lg'>
-                <Tab key='1' title='Hàng hóa'>
+                <Tab key='1' title='Điện thoại'>
                     <div className='mt-4 flex flex-col justify-around bg-section-pink '>
                         <TableItem />
                     </div>
