@@ -42,7 +42,7 @@ const createOrder = asyncHandler(async (req, res) => {
 const updateStatus = asyncHandler(async (req, res) => {
 	const { status, oid } = req.body;
 
-	const updated = await Order.findByIdAndUpdate(oid, { status, dateProceeded: Date.now() }, { new: true });
+	const updated = await Order.findByIdAndUpdate(oid, { status, dateProceeded: Date.now() }, { new: true }).populate("orderBy", "name");
 
 	if (!updated) {
 		throw new CustomAPIError("No order with that id", 400);
@@ -50,6 +50,7 @@ const updateStatus = asyncHandler(async (req, res) => {
 
 	if (updated.status === "Accepted") {
 	}
+	console.log();
 	return res.status(204).send();
 });
 
