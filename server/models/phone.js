@@ -39,9 +39,8 @@ const phoneSchema = new mongoose.Schema(
 			required: true,
 		},
 		technicalSpecifications: {
-			type: Map,
-			of: String,
-			required: true,
+			type: Object,
+			default: {},
 		},
 		avgRating: {
 			type: Number,
