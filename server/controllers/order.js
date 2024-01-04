@@ -47,6 +47,9 @@ const updateStatus = asyncHandler(async (req, res) => {
 	if (!updated) {
 		throw new CustomAPIError("No order with that id", 400);
 	}
+
+	if (updated.status === "Accepted") {
+	}
 	return res.status(204).send();
 });
 
