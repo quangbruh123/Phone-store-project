@@ -1,17 +1,13 @@
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input } from "@nextui-org/react";
 import { Editor } from "@tinymce/tinymce-react";
-import { PlusIcon } from "./PlusIcon.jsx";
-import { useEffect, useRef, useState } from "react";
 
-export default function AddItemModal() {
+import { useEffect, useRef, useState } from "react";
+import { EditIcon } from "../../../assets/EditIcon";
+
+export default function EditItemModal() {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const editorRef = useRef(null);
 
-    // const log = () => {
-    //     if (editorRef.current) {
-    //         console.log(editorRef.current.getContent());
-    //     }
-    // };
     const [payload, setPayload] = useState({});
 
     useEffect(() => {
@@ -19,9 +15,9 @@ export default function AddItemModal() {
     }, [payload]);
     return (
         <>
-            <Button onPress={onOpen} color='primary' endContent={<PlusIcon />}>
-                Thêm sản phẩm
-            </Button>
+            <div onClick={onOpen}>
+                <EditIcon onClick={onOpen} color='success' />
+            </div>
             <Modal size='3xl' isOpen={isOpen} onOpenChange={onOpenChange} placement='top-center' scrollBehavior={"outside"}>
                 <ModalContent>
                     {(onClose) => (

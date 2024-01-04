@@ -1,28 +1,16 @@
 import FunctionTabs from "./FunctionTabs";
-import { useSelector } from "react-redux";
-import { getAccessToken } from "../../store/authReducer";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { getAccessToken } from "../../store/authReducer.js";
+import handleRole from "../../utils/handleRole.js";
 
-function AdminPage() {
-    const token = useSelector(getAccessToken);
-
+const AdminPage = () => {
     const nav = useNavigate();
-
-    const handleRole = () => {
-        if (!token) {
-            nav("/");
-        } else {
-            const tokenParts = token?.split(".");
-            const decoded = JSON.parse(atob(tokenParts[1]));
-
-            if (decoded.role != "admin") {
-                nav("/");
-            }
-        }
-    };
+    const token = useSelector(getAccessToken);
     useEffect(() => {
-        handleRole();
+        const res = handleRole(token);
+        if (!res) nav("/");
     });
     return (
         <div className='mx-20 my-5'>
@@ -30,7 +18,7 @@ function AdminPage() {
             <FunctionTabs />
         </div>
     );
-}
+};
 
 export function Component() {
     return <AdminPage />;

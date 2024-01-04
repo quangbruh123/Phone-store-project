@@ -12,19 +12,23 @@ import {
     DropdownMenu,
     DropdownItem,
     Pagination,
+    Tooltip,
 } from "@nextui-org/react";
 import useFetchDataForArray from "../../../utils/useFetchDataForArray";
-import { VerticalDotsIcon } from "./VerticalDotsIcon";
+
 import { deletePhone } from "../../../api/admin";
 import { ChevronDownIcon } from "./ChevronDownIcon";
 import { columns } from "./data";
 import { capitalize } from "./utils";
+import { DeleteIcon } from "../../../assets/DeleteIcon";
+import { EditIcon } from "../../../assets/EditIcon";
 import AddItemModal from "./AddItemModal";
+import EditItemModal from "./EditItemModal";
 
 const INITIAL_VISIBLE_COLUMNS = ["phoneName", "brand", "price", "quantity", "actions"];
 
 export default function TableItem() {
-    const { data: phones, isLoading, error, reFetch } = useFetchDataForArray("/phone", null);
+    const { data: phones, isLoading, reFetch } = useFetchDataForArray("/phone", null);
 
     const [visibleColumns, setVisibleColumns] = React.useState(new Set(INITIAL_VISIBLE_COLUMNS));
 
@@ -77,25 +81,22 @@ export default function TableItem() {
         switch (columnKey) {
             case "actions":
                 return (
-                    <div className='relative flex justify-end items-center gap-2'>
-                        <Dropdown>
-                            <DropdownTrigger>
-                                <Button isIconOnly size='sm' variant='light'>
-                                    <VerticalDotsIcon className='text-default-300' />
-                                </Button>
-                            </DropdownTrigger>
-                            <DropdownMenu>
-                                {/* <DropdownItem onClick={onOpen}>Sửa</DropdownItem> */}
-
-                                <DropdownItem
-                                    onClick={() => {
-                                        handleDelete(phone._id);
-                                    }}
-                                >
-                                    Xóa
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
+                    <div className='relative flex items-center gap-2'>
+                        <Tooltip content='Sửa' color='success'>
+                            <span className='text-lg text-default-400 cursor-pointer active:opacity-50'>
+                                <EditItemModal />
+                            </span>
+                        </Tooltip>
+                        <Tooltip color='danger' content='Xóa'>
+                            <span
+                                className='text-lg text-danger cursor-pointer active:opacity-50'
+                                onClick={() => {
+                                    handleDelete(phone._id);
+                                }}
+                            >
+                                <DeleteIcon />
+                            </span>
+                        </Tooltip>
                     </div>
                 );
             default:
