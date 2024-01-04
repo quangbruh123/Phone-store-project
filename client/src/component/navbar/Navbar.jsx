@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { BsBookmarkHeart } from "react-icons/bs";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { MdOutlineExplore } from "react-icons/md";
-import { FaCaretDown, FaUser } from "react-icons/fa";
+import { FaCaretDown, FaUser, FaHandPointRight } from "react-icons/fa";
 import { CiLogout } from "react-icons/ci";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -15,6 +15,7 @@ import MenuDropdown from "./MenuDropdown";
 import Logo from "./Logo";
 import { getAccessToken, getUserInfo, signOut } from "../../store/authReducer";
 import Search from "../filters/Search";
+import handleRole from "../../utils/handleRole";
 
 const Navbar = () => {
     const navigate = useNavigate();
@@ -93,6 +94,13 @@ const Navbar = () => {
                                         <FaUser></FaUser>
                                         <div>Thông tin tài khoản</div>
                                     </div>
+                                    {handleRole(token) && (
+                                        <div className='flex cursor-pointer items-center gap-4 px-5 py-4 hover:bg-gray-300' onClick={() => navigate("/admin")}>
+                                            <FaHandPointRight></FaHandPointRight>
+                                            <div>Chuyển sang trang quản lý</div>
+                                        </div>
+                                    )}
+
                                     <div
                                         className='flex cursor-pointer items-center gap-4 px-5 py-4 font-semibold text-red-600 hover:bg-gray-300'
                                         onClick={() => {

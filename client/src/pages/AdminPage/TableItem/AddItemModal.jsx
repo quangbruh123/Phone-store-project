@@ -2,6 +2,7 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDi
 import { Editor } from "@tinymce/tinymce-react";
 import { PlusIcon } from "./PlusIcon.jsx";
 import { useEffect, useRef, useState } from "react";
+import { createPhone } from "../../../api/item.js";
 
 export default function AddItemModal() {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -13,9 +14,41 @@ export default function AddItemModal() {
     //     }
     // };
     const [payload, setPayload] = useState({});
+    const handleSubmit = () => {
+        const formData = new FormData();
+        // const mapSpec = new Map();
+        // const map = new Map([...Object.entries(payload.technicalSpecifications)]);
+        // console.log(map);
+        const finStorage = payload.storageString.split(",");
+        setPayload((prev) => {
+            return {
+                ...prev,
+                phoneStorage: finStorage,
+            };
+        });
+        for (const [key, value] of Object.entries(payload)) {
+            if (Array.isArray(value)) {
+                for (const element of value) {
+                    formData.append(key, element);
+                }
+            } else {
+                if (typeof value === "object") {
+                    formData.append(key, JSON.stringify(value));
+                } else {
+                    formData.append(key, value);
+                }
+            }
+        }
 
+        for (const [key, value] of formData.entries()) {
+            console.log(key, ":", value);
+        }
+        // createPhone(formData).then(() => {
+        //     console.log("create thanfh cong");
+        // });
+    };
     useEffect(() => {
-        console.log(payload);
+        // console.log(payload);
     }, [payload]);
     return (
         <>
@@ -86,7 +119,7 @@ export default function AddItemModal() {
                                         setPayload((prev) => {
                                             return {
                                                 ...prev,
-                                                storage: e.target.value,
+                                                storageString: e.target.value,
                                             };
                                         });
                                     }}
@@ -130,7 +163,7 @@ export default function AddItemModal() {
                                         setPayload((prev) => {
                                             return {
                                                 ...prev,
-                                                editor: newValue,
+                                                description: newValue,
                                             };
                                         });
                                     }}
@@ -144,7 +177,7 @@ export default function AddItemModal() {
                                         setPayload((prev) => {
                                             return {
                                                 ...prev,
-                                                specs: { ...prev.specs, "Màn hình": e.target.value },
+                                                technicalSpecifications: { ...prev.technicalSpecifications, "Màn hình": e.target.value },
                                             };
                                         });
                                     }}
@@ -156,7 +189,7 @@ export default function AddItemModal() {
                                         setPayload((prev) => {
                                             return {
                                                 ...prev,
-                                                specs: { ...prev.specs, "Hệ điều hành": e.target.value },
+                                                technicalSpecifications: { ...prev.technicalSpecifications, "Hệ điều hành": e.target.value },
                                             };
                                         });
                                     }}
@@ -168,7 +201,7 @@ export default function AddItemModal() {
                                         setPayload((prev) => {
                                             return {
                                                 ...prev,
-                                                specs: { ...prev.specs, "Camera sau": e.target.value },
+                                                technicalSpecifications: { ...prev.technicalSpecifications, "Camera sau": e.target.value },
                                             };
                                         });
                                     }}
@@ -180,7 +213,7 @@ export default function AddItemModal() {
                                         setPayload((prev) => {
                                             return {
                                                 ...prev,
-                                                specs: { ...prev.specs, "Camera trước": e.target.value },
+                                                technicalSpecifications: { ...prev.technicalSpecifications, "Camera trước": e.target.value },
                                             };
                                         });
                                     }}
@@ -192,7 +225,7 @@ export default function AddItemModal() {
                                         setPayload((prev) => {
                                             return {
                                                 ...prev,
-                                                specs: { ...prev.specs, Chip: e.target.value },
+                                                technicalSpecifications: { ...prev.technicalSpecifications, Chip: e.target.value },
                                             };
                                         });
                                     }}
@@ -204,7 +237,7 @@ export default function AddItemModal() {
                                         setPayload((prev) => {
                                             return {
                                                 ...prev,
-                                                specs: { ...prev.specs, RAM: e.target.value },
+                                                technicalSpecifications: { ...prev.technicalSpecifications, RAM: e.target.value },
                                             };
                                         });
                                     }}
@@ -217,7 +250,7 @@ export default function AddItemModal() {
                                         setPayload((prev) => {
                                             return {
                                                 ...prev,
-                                                specs: { ...prev.specs, SIM: e.target.value },
+                                                technicalSpecifications: { ...prev.technicalSpecifications, SIM: e.target.value },
                                             };
                                         });
                                     }}
@@ -229,7 +262,7 @@ export default function AddItemModal() {
                                         setPayload((prev) => {
                                             return {
                                                 ...prev,
-                                                specs: { ...prev.specs, Pin: e.target.value },
+                                                technicalSpecifications: { ...prev.technicalSpecifications, Pin: e.target.value },
                                             };
                                         });
                                     }}
@@ -243,8 +276,9 @@ export default function AddItemModal() {
                                     onChange={(e) => {
                                         const temp = [];
                                         for (let i = 0; i < e.target.files.length; i++) {
-                                            temp.push(e.target.files[i].name);
+                                            temp.push(e.target.files[i]);
                                         }
+                                        console.log(temp);
                                         setPayload((prev) => {
                                             return {
                                                 ...prev,
@@ -262,7 +296,7 @@ export default function AddItemModal() {
                                         setPayload((prev) => {
                                             return {
                                                 ...prev,
-                                                thumb: e.target.files[0].name,
+                                                thumb: e.target.files[0],
                                             };
                                         });
                                     }}
@@ -272,7 +306,12 @@ export default function AddItemModal() {
                                 <Button color='danger' variant='flat' onPress={onClose}>
                                     Đóng
                                 </Button>
-                                <Button color='primary' onPress={onClose}>
+                                <Button
+                                    color='primary'
+                                    onPress={() => {
+                                        handleSubmit();
+                                    }}
+                                >
                                     Thêm
                                 </Button>
                             </ModalFooter>
