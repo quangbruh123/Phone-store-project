@@ -17,6 +17,7 @@ import { getOnePhone, rate } from "../../api/phone";
 import { StarRating } from "../../component";
 import Comments from "../../component/products/Comments";
 import { setAccessToken } from "../../store/authReducer";
+import PhoneStorageSelect from "../../component/products/PhoneStorageSelect";
 
 const ProductDetails = () => {
     const navigate = useNavigate();
@@ -29,14 +30,29 @@ const ProductDetails = () => {
     const cartItems = useSelector(getCartItems);
     const favoriteItems = useSelector(getFavoriteItem);
 
+    // Biến lưu trữ thông tin sản phẩm
     const [productInfo, setProductInfo] = useState({});
+
+    // Biến lưu trữ thông tin thông số kỹ thuật sản phẩm
     const [technicalSpecifications, setTechnicalSpecification] = useState({});
+
+    // Biến lưu trữ phoneStorage của sản phẩm
+    const [phoneStorage, setPhoneStorage] = useState([]);
 
     const [comments, setComments] = useState([]);
     const [commentInfo, setCommentInfo] = useState({
         pid: productId,
         star: 0,
         comment: "",
+    });
+
+    const [cartInfo, setCartInfo] = useState({
+        pid: productId,
+        phoneName: "",
+        quantity: 1,
+        phoneStorage: "",
+        price: 0,
+        thumb: "",
     });
 
     const [oneStar, setOneStar] = useState(0);
@@ -61,6 +77,14 @@ const ProductDetails = () => {
                 setProductInfo(data.data);
                 setTechnicalSpecification(data.data.technicalSpecifications);
                 setComments(data.data.ratings);
+                setPhoneStorage(data.data.phoneStorage);
+                setCartInfo((prev) => ({
+                    ...prev,
+                    phoneName: data.data.phoneName,
+                    price: data.data.price,
+                    thumb: data.data.imageLinks[0],
+                    phoneStorage: data.data.phoneStorage[0],
+                }));
             }
         });
     }, []);
@@ -133,6 +157,13 @@ const ProductDetails = () => {
         });
     };
 
+    const handleChangeCartPhoneStorage = (payload) => {
+        setCartInfo((prev) => ({
+            ...prev,
+            phoneStorage: payload,
+        }));
+    };
+
     return (
         <div className='pt-5 sm:pt-3 pb-2'>
             <div className='w-full flex gap-4 mb-7'>
@@ -150,13 +181,23 @@ const ProductDetails = () => {
                 </Carousel>
                 <div className='w-[55%]'>
                     <div className='flex items-center justify-between border-b-[1px] border-gray-300 pb-1 mb-4'>
-                        <div className='text-5xl font-bold w-full'>{productInfo?.phoneName}</div>
+                        <div
+                            className='text-5xl font-bold w-full'
+                            onClick={() => {
+                                console.log(cartInfo);
+                            }}
+                        >
+                            {productInfo?.phoneName}
+                        </div>
                         {/* <div className='flex gap-1 text-lg'>
                             <GiRoundStar className='text-yellow-400 ml-3 mt-[2px]'></GiRoundStar>
                             {productInfo?.avgRating}
                         </div> */}
                     </div>
                     <div className='text-justify mb-5'>{productInfo?.description}</div>
+                    <div className='flex gap-3 items-center mb-5'>
+                        <PhoneStorageSelect phoneStorage={phoneStorage} onChange={handleChangeCartPhoneStorage}></PhoneStorageSelect>
+                    </div>
                     <div className='flex gap-2 items-center mb-3'>
                         <div className='font-bold text-2xl'>Giá sản phẩm:</div>
                         <div className='text-3xl text-amber-600'>{(productInfo?.price * 1).toLocaleString("vi-VN")}₫</div>
@@ -204,14 +245,15 @@ const ProductDetails = () => {
                             onClick={() => {
                                 var temp = 0;
                                 cartItems?.map((item) => {
-                                    if (productInfo?._id == item._id) {
+                                    if (productInfo?._id == item.pid) {
                                         temp = -1;
                                     } else {
                                         temp += 1;
                                     }
                                 });
                                 if (temp == cartCount) {
-                                    dispatch(addCartItems(productInfo));
+                                    console.log(cartInfo);
+                                    dispatch(addCartItems(cartInfo));
                                     toast.success("Thêm vào giỏ hàng thành công.");
                                 } else {
                                     navigate("/cart");

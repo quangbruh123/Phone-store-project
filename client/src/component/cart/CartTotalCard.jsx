@@ -7,6 +7,7 @@ import PriceCard from "./PriceCard";
 
 const CartTotalCard = ({ cart }) => {
     const navigate = useNavigate();
+    console.log(cart);
 
     const [totalPriceOfCartProducts, setTotalPriceOfCartProducts] = useState(0);
 
@@ -34,7 +35,6 @@ const CartTotalCard = ({ cart }) => {
                 <h1 className='text-xl' onClick={() => console.log(totalPriceOfCartProducts)}>
                     Chi tiết giỏ hàng
                 </h1>
-                <div className='px-3 py-2 rounded-lg border flex items-center cursor-pointer'>Lưu giỏ hàng</div>
             </div>
             {cart.map((product) => (
                 <PriceCard key={product._id} product={product} />

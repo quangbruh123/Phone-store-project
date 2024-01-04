@@ -21,10 +21,10 @@ const CartItemCard = ({ product, isSearch, setSearch, index }) => {
             <div className='flex  items-center flex-wrap gap-2 w-full'>
                 <div className='flex flex-wrap xs:flex-nowrap justify-center xs:justify-start flex-1 items-center gap-5'>
                     <div className={` bg-black/[0.075] ${isSearch ? "h-14 w-14 " : "h-28 w-28"} rounded-md flex items-center`}>
-                        <img src={product?.imageLinks[0]} alt='' className='object-fit w-full' />
+                        <img src={product?.thumb} alt='' className='object-fit w-full' />
                     </div>
                     <div className='flex flex-col gap-3'>
-                        <h2 className='text-xl py-3 font-semibold'>{product.phoneName}</h2>
+                        <h2 className='text-xl py-3 font-semibold'>{product?.phoneName}</h2>
 
                         {!isSearch && (
                             <div className='flex flex-col gap-3'>
@@ -42,7 +42,7 @@ const CartItemCard = ({ product, isSearch, setSearch, index }) => {
                                     >
                                         <AiOutlineMinus />
                                     </button>
-                                    <span className='h-full w-10 bg-black/[0.075]  rounded-sm flex items-center justify-center'>{product.count}</span>
+                                    <span className='h-full w-10 bg-black/[0.075]  rounded-sm flex items-center justify-center'>{product.quantity}</span>
                                     <button
                                         className='bg-[--primary-text-color] p-1 text-gray-100 rounded-md text-xs disabled:cursor-not-allowed'
                                         // disabled={disableCart}

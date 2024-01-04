@@ -26,3 +26,17 @@ export const updateUser = async (payload) => {
         return error;
     }
 };
+
+export const replaceNewCart = async (payload) => {
+    try {
+        const response = await axiosInstance({
+            method: "delete",
+            url: "/user/current",
+            data: payload,
+            withCredentials: true,
+        });
+        return response;
+    } catch (error) {
+        return error;
+    }
+};
