@@ -48,6 +48,7 @@ const ProductDetails = () => {
 
     const [cartInfo, setCartInfo] = useState({
         pid: productId,
+        product: productId,
         phoneName: "",
         quantity: 1,
         phoneStorage: "",
@@ -129,14 +130,14 @@ const ProductDetails = () => {
         }
 
         var temp_cart = 0;
-        favoriteItems?.map((item) => {
-            if (productInfo?._id == item._id) {
+        cartItems?.map((item) => {
+            if (productInfo?._id == item.pid) {
                 temp_cart = -1;
             } else {
                 temp_cart += 1;
             }
         });
-        if (temp_cart != favoriteCount) {
+        if (temp_cart != cartCount) {
             setInCartList(true);
         }
     }, [productInfo]);

@@ -32,7 +32,9 @@ export const replaceNewCart = async (payload) => {
         const response = await axiosInstance({
             method: "delete",
             url: "/user/current",
-            data: payload,
+            data: {
+                newCart: payload,
+            },
             withCredentials: true,
         });
         return response;

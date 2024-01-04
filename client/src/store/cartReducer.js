@@ -7,9 +7,13 @@ const cartReducer = createSlice({
         cartItems: [],
     },
     reducers: {
+        setCartItems: (state, action) => {
+            state.quantity = action.payload.quantity;
+            state.cartItems = action.payload.cart;
+        },
         addCartItems: (state, action) => {
             state.quantity += 1;
-            state.cartItems.push({ ...action.payload, count: 1 });
+            state.cartItems.push(action.payload);
         },
         removeCartItems: (state, action) => {
             state.quantity -= 1;
@@ -20,15 +24,15 @@ const cartReducer = createSlice({
             state.cartItems = [];
         },
         cartItemIncrement: (state, action) => {
-            state.cartItems[action.payload].count += 1;
+            state.cartItems[action.payload].quantity += 1;
         },
         cartItemDecrement: (state, action) => {
-            state.cartItems[action.payload].count -= 1;
+            state.cartItems[action.payload].quantity -= 1;
         },
     },
 });
 
-export const { addCartItems, removeCartItems, clearCartItems, cartItemDecrement, cartItemIncrement } = cartReducer.actions;
+export const { setCartItems, addCartItems, removeCartItems, clearCartItems, cartItemDecrement, cartItemIncrement } = cartReducer.actions;
 
 export default cartReducer.reducer;
 

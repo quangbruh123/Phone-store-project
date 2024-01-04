@@ -20,7 +20,7 @@ const SingleProduct = ({ product }) => {
     useEffect(() => {
         var temp = 0;
         favoriteItems?.map((item) => {
-            if (product?._id == item._id) {
+            if (product?._id == item.pid) {
                 temp = -1;
             } else {
                 temp += 1;
@@ -60,7 +60,7 @@ const SingleProduct = ({ product }) => {
                     onClick={() => {
                         var temp = 0;
                         favoriteItems?.map((item) => {
-                            if (product?._id == item._id) {
+                            if (product?._id == item.pid) {
                                 temp = -1;
                             } else {
                                 temp += 1;

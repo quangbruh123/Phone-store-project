@@ -12,18 +12,18 @@ const CartTotalCard = ({ cart }) => {
     const [totalPriceOfCartProducts, setTotalPriceOfCartProducts] = useState(0);
 
     useEffect(() => {
-        var temp;
+        var temp = 0;
         cart.map((product) => {
-            temp = product?.price * product?.count;
+            temp = temp + product?.price * product?.quantity;
             console.log(temp);
         });
         setTotalPriceOfCartProducts(temp);
     }, []);
 
     useEffect(() => {
-        var temp;
+        var temp = 0;
         cart.map((product) => {
-            temp = product?.price * product?.count;
+            temp = temp + product?.price * product?.quantity;
             console.log(temp);
         });
         setTotalPriceOfCartProducts(temp);
@@ -37,7 +37,7 @@ const CartTotalCard = ({ cart }) => {
                 </h1>
             </div>
             {cart.map((product) => (
-                <PriceCard key={product._id} product={product} />
+                <PriceCard key={product.pid} product={product} />
             ))}
 
             <hr />

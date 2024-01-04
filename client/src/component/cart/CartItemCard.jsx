@@ -24,7 +24,9 @@ const CartItemCard = ({ product, isSearch, setSearch, index }) => {
                         <img src={product?.thumb} alt='' className='object-fit w-full' />
                     </div>
                     <div className='flex flex-col gap-3'>
-                        <h2 className='text-xl py-3 font-semibold'>{product?.phoneName}</h2>
+                        <h2 className='text-xl py-3 font-semibold line-clamp-1'>
+                            {product?.phoneName} {product?.phoneStorage}
+                        </h2>
 
                         {!isSearch && (
                             <div className='flex flex-col gap-3'>
@@ -35,7 +37,7 @@ const CartItemCard = ({ product, isSearch, setSearch, index }) => {
                                         // disabled={disableCart}
                                         disabled={false}
                                         onClick={() => {
-                                            if (product.count > 1) {
+                                            if (product.quantity > 1) {
                                                 dispatch(cartItemDecrement(index));
                                             }
                                         }}
@@ -48,6 +50,7 @@ const CartItemCard = ({ product, isSearch, setSearch, index }) => {
                                         // disabled={disableCart}
                                         disabled={false}
                                         onClick={() => {
+                                            console.log("haha");
                                             dispatch(cartItemIncrement(index));
                                         }}
                                     >

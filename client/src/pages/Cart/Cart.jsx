@@ -1,17 +1,32 @@
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 
 import emptyBag from "../../assets/empty-shopping-bag.png";
 import CartTotalCard from "../../component/cart/CartTotalCard";
 import { CartItemCard } from "../../component";
 import { getQuantity, getCartItems, removeCartItems } from "../../store/cartReducer";
+import { replaceNewCart, getCurrentUser } from "../../api/user";
 
 const Cart = () => {
     const navigate = useNavigate();
 
     const cartItems = useSelector(getCartItems);
     const cartCount = useSelector(getQuantity);
+
+    const handleUpdateCart = async () => {
+        toast.loading("Đang xử lý thông tin...");
+        console.log(cartItems);
+        const response = await replaceNewCart(cartItems);
+        if (response.status == 204) {
+            toast.dismiss();
+            toast.success("Đã lưu giỏ hàng thành công.");
+        } else {
+            toast.dismiss();
+            toast.error("Đã xó lỗi xảy ra");
+        }
+    };
 
     return (
         <div className='py-2 '>
@@ -25,7 +40,9 @@ const Cart = () => {
                     >
                         Giỏ hàng({cartCount})
                     </h1>
-                    <div className='px-3 rounded-lg border flex items-center cursor-pointer hover:bg-gray-200'>Lưu giỏ hàng</div>
+                    <div className='px-3 rounded-lg border flex items-center cursor-pointer hover:bg-gray-200' onClick={handleUpdateCart}>
+                        Lưu giỏ hàng
+                    </div>
                 </div>
             )}
             {cartCount != 0 ? (
@@ -50,6 +67,7 @@ const Cart = () => {
                     </button>
                 </div>
             )}
+            <ToastContainer></ToastContainer>
         </div>
     );
 };
