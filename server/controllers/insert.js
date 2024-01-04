@@ -4,11 +4,22 @@ const Order = require("../models/order");
 const Brand = require("../models/brand");
 const phoneJson = require("../data/phones.json");
 const accountJson = require("../data/account.json");
+const brandJson = require("../data/brand.json");
 const asyncHandler = require("express-async-handler");
 const createSlug = require("../utils/createSlug");
 const insertPhones = asyncHandler(async (req, res) => {
 	for (phone of phoneJson) {
 		if (phone) {
+			for (let key in phone.technicalSpecifications) {
+				// Kiểm tra xem khóa có kết thúc bằng ':' hay không
+				if (key.endsWith(":")) {
+					// Nếu có, loại bỏ ký tự ':' ở cuối
+					const newKey = key.slice(0, -1);
+					// Tạo một cặp khóa mới và xóa cặp khóa cũ
+					technicalSpecifications[newKey] = technicalSpecifications[key];
+					delete technicalSpecifications[key];
+				}
+			}
 			await Phone.create({
 				...phone,
 				slug: createSlug(phone.phoneName),
