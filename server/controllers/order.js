@@ -1,5 +1,4 @@
 const Order = require("../models/order");
-const Product = require("../models/product");
 const User = require("../models/user");
 const Coupon = require("../models/coupon");
 const asyncHandler = require("express-async-handler");
@@ -7,15 +6,17 @@ const asyncHandler = require("express-async-handler");
 const createOrder = asyncHandler(async (req, res) => {
 	const { _id } = req.user;
 	const { couponId } = req.body;
-	const user = await User.findById(_id).select("cart").populate("cart.product", "title price");
+	const user = await User.findById(_id).select("cart").populate("cart.product", "phoneName price");
 	const products = user.cart.map((obj) => {
+		console.log(obj);
 		return {
-			productId: obj.product._id,
+			productId: obj.product._id.toString(),
 			quantity: obj.quantity,
+			phoneStorage: obj.phoneStorage,
 		};
 	});
 	let totalCost = user.cart.reduce((prev, current) => {
-		return current.product.price * current.quantity + prev;
+		return current.price * current.quantity + prev;
 	}, 0);
 
 	let coupon = null;
@@ -29,10 +30,10 @@ const createOrder = asyncHandler(async (req, res) => {
 	const newOrder = await Order.create({
 		products,
 		total: totalCost,
-		coupon: coupon._id,
+		coupon: coupon?._id,
 		orderBy: _id,
 	});
-	return res.status(StatusCodes.CREATED).json({
+	return res.status(201).json({
 		newOrder,
 	});
 });
@@ -61,7 +62,7 @@ const getUserOrder = asyncHandler(async (req, res) => {
 const getAllOrder = asyncHandler(async (req, res) => {
 	const orders = await Order.find().populate("coupon").populate("orderBy", "firstName lastName");
 
-	return res.status(StatusCodes.OK).json({
+	return res.status(200).json({
 		orders,
 	});
 });

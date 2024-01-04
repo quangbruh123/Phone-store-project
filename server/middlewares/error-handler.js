@@ -10,6 +10,7 @@ const errorHandler = (err, req, res, next) => {
 			.join(" ");
 		customError.statusCode = 400;
 	}
+	console.log(err);
 	return res.status(customError.statusCode).json(customError);
 };
 

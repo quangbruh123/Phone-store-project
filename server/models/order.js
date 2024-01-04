@@ -4,8 +4,9 @@ const mongoose = require("mongoose"); // Erase if already required
 const orderSchema = new mongoose.Schema({
 	products: [
 		{
-			productId: { type: mongoose.Types.ObjectId, ref: "Product" },
+			productId: { type: mongoose.Types.ObjectId, ref: "Phone" },
 			quantity: Number,
+			phoneStorage: String,
 		},
 	],
 	status: {

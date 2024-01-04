@@ -35,7 +35,7 @@ const insertAccount = asyncHandler(async (req, res) => {
 });
 
 const insertOrder = asyncHandler(async (req, res) => {
-	const allProduct = await Phone.find().skip(40).limit(5);
+	const allProduct = await Phone.find().skip(0).limit(20);
 
 	const products = allProduct.map((el) => {
 		return {
@@ -49,7 +49,7 @@ const insertOrder = asyncHandler(async (req, res) => {
 		totalCost += allProduct[i].price * products[i].quantity;
 	}
 
-	const orders = Array.from({ length: 3 }, () => ({
+	const orders = Array.from({ length: 20 }, () => ({
 		products,
 		status: "Processing",
 		total: totalCost,
