@@ -47,8 +47,24 @@ export const forgotPassword = async (email) => {
         const response = await axiosInstance({
             method: "post",
             url: "/auth/forget-password",
-            params: {
+            data: {
                 email: email,
+            },
+        });
+        return response;
+    } catch (error) {
+        return error;
+    }
+};
+export const resetPassword = async (password, email, token) => {
+    try {
+        const response = await axiosInstance({
+            method: "post",
+            url: "/auth/reset-token",
+            data: {
+                password: password,
+                email: email,
+                resetToken: token,
             },
         });
         return response;

@@ -74,7 +74,7 @@ const Login = () => {
                                 />
                             </label>
                             <label className='flex flex-col'>
-                                Password
+                                Mật khẩu
                                 <input
                                     type='password'
                                     className='border rounded-md p-1.5 shadow-sm'
@@ -101,20 +101,12 @@ const Login = () => {
                                         {loggingIn ? (!loginSuccessful ? "Đang đăng nhập..." : "Đăng nhập thành công") : "Đăng nhập"}
                                     </div>
                                 </button>
-                                <button
-                                    className='btn-secondary w-2/3 text-sm md:text-base text-center'
-                                    onClick={() => {
-                                        setLoginCredentials({
-                                            ...loginCredentials,
-                                            email: "kookie@bangtan.com",
-                                            password: "bangtan0707",
-                                        });
-                                    }}
-                                >
-                                    Login as a Guest
-                                </button>
+
                                 <Link to='/signup' className='underline text-gray-600'>
-                                    Create New Account
+                                    Tạo tài khoản mới
+                                </Link>
+                                <Link to='/forgot-password' className='underline text-gray-600'>
+                                    Quên mật khẩu?
                                 </Link>
                             </div>
                         </form>
