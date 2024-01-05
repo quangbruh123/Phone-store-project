@@ -1,6 +1,7 @@
 const CustomAPIError = require("../error/customError");
 const User = require("../models/user");
 const asyncHandler = require("express-async-handler");
+const sendEmail = require("../utils/sendEmail");
 
 const register = asyncHandler(async (req, res) => {
 	const newUser = await User.create(req.body);
@@ -89,12 +90,15 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
 	const resetToken = await user.createPasswordResetToken();
 
-	const html = `Xin vui lòng click vào link này để thay đổi mật khẩu, link có hiệu lực 30 phút: <a href=
-${process.env.URL_SERVER}/auth/reset-password?email=${email}&resetToken=${resetToken}>Nhấn vào đây</a>`;
+	const mailContent = {
+		subject: "Khôi phục mật khẩu",
+		html: `Xin vui lòng click vào link này để thay đổi mật khẩu, link có hiệu lực 30 phút: <a href=
+${process.env.CLIENT_URL}/resetPassword?email=${email}&resetToken=${resetToken}>Nhấn vào đây</a>`,
+	};
 
-	const rs = await sendEmail(email, html);
+	const rs = await sendEmail(email, mailContent, email);
 
-	return res.status(StatusCodes.OK).json({
+	return res.status(200).json({
 		success: true,
 		rs,
 	});
@@ -122,7 +126,7 @@ const checkResetToken = asyncHandler(async (req, res) => {
 	user.passwordResetExpired = undefined;
 
 	await user.save();
-	return res.status(StatusCodes.OK).json({
+	return res.status(200).json({
 		success: true,
 		msg: "Reset password oke",
 	});
