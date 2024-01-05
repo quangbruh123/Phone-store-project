@@ -40,9 +40,9 @@ export default function AddItemModal() {
         for (const [key, value] of formData.entries()) {
             console.log(key, ":", value);
         }
-        // createPhone(formData).then(() => {
-        //     console.log("create thanfh cong");
-        // });
+        createPhone(formData).then(() => {
+            console.log("create thanfh cong");
+        });
     };
 
     return (

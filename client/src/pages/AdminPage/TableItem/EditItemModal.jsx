@@ -28,9 +28,18 @@ export default function EditItemModal({ phoneID = 0 }) {
                 phoneStorage: finStorage,
             };
         });
+        if (data?.imageLinks[0] == payload?.imageLinks[0]) {
+            delete payload?.imageLinks;
+        }
+        console.log(payload);
+
         for (const [key, value] of Object.entries(payload)) {
             if (key == "thumb") {
                 formData.append(key, value);
+            } else if (key == "imageLinks") {
+                for (const element of value) {
+                    formData.append("imageLinks[]", element);
+                }
             } else {
                 if (Array.isArray(value)) {
                     for (const element of value) {
@@ -45,11 +54,11 @@ export default function EditItemModal({ phoneID = 0 }) {
                 }
             }
         }
-        // for (const [key, value] of formData.entries()) {
-        //     console.log(key, ":", value);
-        // }
-        editPhone(phoneID, payload).then(() => {
-            console.log("editPhone thành công");
+        for (const [key, value] of formData.entries()) {
+            console.log(key, ":", value);
+        }
+        editPhone(phoneID, payload).then((response) => {
+            if (response.status === 204) console.log("editPhone thành công");
         });
     };
     async function getBase64(file) {
@@ -323,6 +332,7 @@ export default function EditItemModal({ phoneID = 0 }) {
                                     onChange={(e) => {
                                         const temp = [];
                                         for (let i = 0; i < e.target.files.length; i++) {
+                                            console.log(e.target.files[i]);
                                             temp.push(e.target.files[i]);
                                         }
 

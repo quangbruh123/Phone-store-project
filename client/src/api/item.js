@@ -26,6 +26,7 @@ export const editPhone = async (id, payload) => {
                 "Content-Type": "multipart/form-data",
             },
         });
+        return response;
     } catch (error) {
         return error;
     }

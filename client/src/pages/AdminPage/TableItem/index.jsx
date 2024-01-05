@@ -65,14 +65,17 @@ export default function TableItem() {
     }, [sortDescriptor, items]);
 
     const handleDelete = (id) => {
-        deletePhone(id)
-            .then(() => {
-                window.alert("Đã xóa thành công");
-                reFetch();
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        if (confirm("Bạn có muốn xóa điện thoại này?")) {
+            deletePhone(id)
+                .then(() => {
+                    window.alert("Đã xóa thành công");
+                    reFetch();
+                    setPage(1);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
     };
 
     const renderCell = React.useCallback((phone, columnKey) => {
