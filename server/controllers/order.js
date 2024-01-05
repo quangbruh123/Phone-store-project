@@ -80,7 +80,7 @@ const updateStatus = asyncHandler(async (req, res) => {
 
 const getUserOrder = asyncHandler(async (req, res) => {
 	const { _id } = req.user;
-	const { status } = req.query;
+	const { status = "Pending" } = req.query;
 	const order = await Order.find({ orderBy: _id, status });
 
 	return res.status(200).json(order);

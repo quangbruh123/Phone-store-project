@@ -113,6 +113,8 @@ const checkResetToken = asyncHandler(async (req, res) => {
 		passwordResetToken: resetToken,
 		passwordResetExpired: { $gt: Date.now() },
 	});
+
+	console.log(user);
 	if (!user) {
 		throw new CustomAPIError("Invalid reset token", 400);
 	}
