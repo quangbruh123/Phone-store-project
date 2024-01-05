@@ -3,17 +3,17 @@ import Checkbox from "./Checkbox";
 import InputRange from "./InputRange";
 import InputRadio from "./InputRadio";
 import InputRadioType2 from "./InputRadioType2";
-// import { useProductsContext } from "../../contexts";
-// import {
-//   checkboxCategories,
-//   gendersList,
-//   ratings,
-// } from "../../utils/constants";
+import BrandSelect from "./BrandSelect";
 
+const Brand = ["Samsung", "Iphone", "Masstel", "Nokia", "Mobell", "Itel", "Xiaomi", "vivo", "OPPO"];
+const Price = [
+    { key: "Dưới 5 triệu", value: "price<5000000" },
+    { key: "10-15 triệu", value: "price>5000000,price<10000000" },
+    { key: "15-25 triệu", value: "price>15000000,price<25000000" },
+    { key: "Trên 25 triệu", value: "price>25000000" },
+];
 const FilterHeading = ({ text }) => <h2 className='text-xl mb-4'>{text}</h2>;
-const Filters = ({ isFilterOpen, setIsFilterOpen }) => {
-    // const { clearFilters } = useProductsContext();
-
+const Filters = ({ isFilterOpen, setIsFilterOpen, onChangeQuery, clear }) => {
     return (
         <aside
             className={`filtersContainer fixed  top-0 h-screen z-10 flex flex-col p-3 gap-3 overflow-auto
@@ -26,28 +26,19 @@ const Filters = ({ isFilterOpen, setIsFilterOpen }) => {
             </div>
             <button
                 className='py-0.5 px-2 w-16 text-center bg-black/[0.2]  text-sm font-semibold shadow-sm rounded-md hover:bg-gray-800 hover:text-white transition-colors '
-                // onClick={clearFilters}
+                onClick={clear}
             >
                 Đặt lại
             </button>
             <section className='py-3'>
                 <FilterHeading text='Tầm giá' />
-                <InputRange />
+                <InputRadio data={Price} onChange={onChangeQuery}></InputRadio>
             </section>
             <section className='py-3'>
-                <FilterHeading text='Danh mục' />
-                <div className='flex flex-col gap-2'>
-                    {/* {checkboxCategories.map((data, index) => (
-                        <Checkbox data={data} key={index} />
-                    ))} */}
+                <FilterHeading text='Hãng điện thoại' />
+                <div className=''>
+                    <BrandSelect brands={Brand} onChange={onChangeQuery}></BrandSelect>
                 </div>
-            </section>
-
-            <section className='py-3 flex flex-col gap-2'>
-                <FilterHeading text='Đánh giá' />
-                {/* {ratings.map((data, index) => (
-                    <InputRadio data={data} key={index} name='rating' />
-                ))} */}
             </section>
         </aside>
     );

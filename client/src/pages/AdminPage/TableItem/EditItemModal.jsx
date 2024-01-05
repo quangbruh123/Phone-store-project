@@ -1,18 +1,81 @@
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input, Image } from "@nextui-org/react";
 import { Editor } from "@tinymce/tinymce-react";
-
+import { editPhone } from "../../../api/item";
 import { useEffect, useRef, useState } from "react";
 import { EditIcon } from "../../../assets/EditIcon";
+import useFetchDataForObject from "../../../utils/useFetchDataForObject";
 
-export default function EditItemModal() {
+export default function EditItemModal({ phoneID = 0 }) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const editorRef = useRef(null);
+    const { data } = useFetchDataForObject(`/phone/${phoneID}`);
+    // const [currentPhone, setCurrentPhone] = useState();
+    // const [imageLinksInput, setImageLinkInput] = useState([]);
+    const [thumbSrc, setThumbSrc] = useState();
+    const [payload, setPayload] = useState(null);
 
-    const [payload, setPayload] = useState({});
+    const handleSubmit = () => {
+        const formData = new FormData();
+        // // for (let i = 0; i < imageLinksInput.length; i++) {
+        // //     formData.append("imageLinks", imageLinksInput[i]);
+        // // }
 
+        const finStorage = payload.storageString?.split(",");
+
+        setPayload((prev) => {
+            return {
+                ...prev,
+                phoneStorage: finStorage,
+            };
+        });
+        for (const [key, value] of Object.entries(payload)) {
+            if (key == "thumb") {
+                formData.append(key, value);
+            } else {
+                if (Array.isArray(value)) {
+                    for (const element of value) {
+                        formData.append(key, element);
+                    }
+                } else {
+                    if (typeof value === "object") {
+                        formData.append(key, JSON.stringify(value));
+                    } else {
+                        formData.append(key, value);
+                    }
+                }
+            }
+        }
+        // for (const [key, value] of formData.entries()) {
+        //     console.log(key, ":", value);
+        // }
+        editPhone(phoneID, payload).then(() => {
+            console.log("editPhone thành công");
+        });
+    };
+    async function getBase64(file) {
+        const res = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+        });
+
+        return res;
+    }
     useEffect(() => {
-        console.log(payload);
-    }, [payload]);
+        if (payload) {
+            if (typeof payload.thumb === "string") setThumbSrc(payload.thumb);
+            else {
+                (async function () {
+                    const res = await getBase64(payload.thumb);
+                    setThumbSrc(res);
+                })();
+            }
+        }
+    }, [payload?.thumb]);
+    useEffect(() => {
+        setPayload({ ...data });
+    }, [data]);
     return (
         <>
             <div onClick={onOpen}>
@@ -22,12 +85,13 @@ export default function EditItemModal() {
                 <ModalContent>
                     {(onClose) => (
                         <>
-                            <ModalHeader className='flex flex-col gap-1'>Thêm sản phẩm</ModalHeader>
+                            <ModalHeader className='flex flex-col gap-1'>Chỉnh sửa sản phẩm</ModalHeader>
                             <ModalBody>
                                 <Input
                                     autoFocus
                                     label='Tên sản phẩm'
                                     variant='bordered'
+                                    value={payload?.phoneName}
                                     onChange={(e) => {
                                         setPayload((prev) => {
                                             return {
@@ -40,6 +104,7 @@ export default function EditItemModal() {
                                 <Input
                                     label='Giá'
                                     variant='bordered'
+                                    value={payload?.price}
                                     onChange={(e) => {
                                         setPayload((prev) => {
                                             return {
@@ -53,6 +118,7 @@ export default function EditItemModal() {
                                     label='Số lượng'
                                     type='number'
                                     variant='bordered'
+                                    value={payload?.quantity}
                                     onChange={(e) => {
                                         setPayload((prev) => {
                                             return {
@@ -65,6 +131,7 @@ export default function EditItemModal() {
                                 <Input
                                     label='Hãng'
                                     variant='bordered'
+                                    value={payload?.brand}
                                     onChange={(e) => {
                                         setPayload((prev) => {
                                             return {
@@ -78,11 +145,12 @@ export default function EditItemModal() {
                                     label='Dung lượng'
                                     placeholder='Tách các loại dung lượng bằng dấu phẩy...'
                                     variant='bordered'
+                                    value={payload.phoneStorage}
                                     onChange={(e) => {
                                         setPayload((prev) => {
                                             return {
                                                 ...prev,
-                                                storage: e.target.value,
+                                                phoneStorage: e.target.value,
                                             };
                                         });
                                     }}
@@ -91,7 +159,7 @@ export default function EditItemModal() {
                                 <Editor
                                     apiKey='08q9h49w88pkez1dqb6wq6jhq2vxg55tq31gewuubrv1epe6'
                                     onInit={(evt, editor) => (editorRef.current = editor)}
-                                    initialValue='<p>Nhập mô tả...</p>'
+                                    initialValue={payload.description}
                                     init={{
                                         height: 500,
                                         menubar: false,
@@ -126,7 +194,7 @@ export default function EditItemModal() {
                                         setPayload((prev) => {
                                             return {
                                                 ...prev,
-                                                editor: newValue,
+                                                description: newValue,
                                             };
                                         });
                                     }}
@@ -136,11 +204,12 @@ export default function EditItemModal() {
                                 <Input
                                     label='Màn hình:'
                                     variant='bordered'
+                                    value={payload.technicalSpecifications["Màn hình"]}
                                     onChange={(e) => {
                                         setPayload((prev) => {
                                             return {
                                                 ...prev,
-                                                specs: { ...prev.specs, "Màn hình": e.target.value },
+                                                technicalSpecifications: { ...prev.technicalSpecifications, "Màn hình": e.target.value },
                                             };
                                         });
                                     }}
@@ -148,11 +217,12 @@ export default function EditItemModal() {
                                 <Input
                                     label='Hệ điều hành:'
                                     variant='bordered'
+                                    value={payload.technicalSpecifications["Hệ điều hành"]}
                                     onChange={(e) => {
                                         setPayload((prev) => {
                                             return {
                                                 ...prev,
-                                                specs: { ...prev.specs, "Hệ điều hành": e.target.value },
+                                                technicalSpecifications: { ...prev.technicalSpecifications, "Hệ điều hành": e.target.value },
                                             };
                                         });
                                     }}
@@ -160,11 +230,12 @@ export default function EditItemModal() {
                                 <Input
                                     label='Camera sau:'
                                     variant='bordered'
+                                    value={payload.technicalSpecifications["Camera sau"]}
                                     onChange={(e) => {
                                         setPayload((prev) => {
                                             return {
                                                 ...prev,
-                                                specs: { ...prev.specs, "Camera sau": e.target.value },
+                                                technicalSpecifications: { ...prev.technicalSpecifications, "Camera sau": e.target.value },
                                             };
                                         });
                                     }}
@@ -172,11 +243,12 @@ export default function EditItemModal() {
                                 <Input
                                     label='Camera trước:'
                                     variant='bordered'
+                                    value={payload.technicalSpecifications["Camera trước"]}
                                     onChange={(e) => {
                                         setPayload((prev) => {
                                             return {
                                                 ...prev,
-                                                specs: { ...prev.specs, "Camera trước": e.target.value },
+                                                technicalSpecifications: { ...prev.technicalSpecifications, "Camera trước": e.target.value },
                                             };
                                         });
                                     }}
@@ -184,11 +256,12 @@ export default function EditItemModal() {
                                 <Input
                                     label='Chip:'
                                     variant='bordered'
+                                    value={payload.technicalSpecifications["Chip"]}
                                     onChange={(e) => {
                                         setPayload((prev) => {
                                             return {
                                                 ...prev,
-                                                specs: { ...prev.specs, Chip: e.target.value },
+                                                technicalSpecifications: { ...prev.technicalSpecifications, Chip: e.target.value },
                                             };
                                         });
                                     }}
@@ -196,11 +269,12 @@ export default function EditItemModal() {
                                 <Input
                                     label='RAM:'
                                     variant='bordered'
+                                    value={payload.technicalSpecifications["RAM"]}
                                     onChange={(e) => {
                                         setPayload((prev) => {
                                             return {
                                                 ...prev,
-                                                specs: { ...prev.specs, RAM: e.target.value },
+                                                technicalSpecifications: { ...prev.technicalSpecifications, RAM: e.target.value },
                                             };
                                         });
                                     }}
@@ -209,11 +283,12 @@ export default function EditItemModal() {
                                 <Input
                                     label='SIM:'
                                     variant='bordered'
+                                    value={payload.technicalSpecifications["SIM"]}
                                     onChange={(e) => {
                                         setPayload((prev) => {
                                             return {
                                                 ...prev,
-                                                specs: { ...prev.specs, SIM: e.target.value },
+                                                technicalSpecifications: { ...prev.technicalSpecifications, SIM: e.target.value },
                                             };
                                         });
                                     }}
@@ -221,16 +296,25 @@ export default function EditItemModal() {
                                 <Input
                                     label='Pin:'
                                     variant='bordered'
+                                    value={payload.technicalSpecifications["Pin"]}
                                     onChange={(e) => {
                                         setPayload((prev) => {
                                             return {
                                                 ...prev,
-                                                specs: { ...prev.specs, Pin: e.target.value },
+                                                technicalSpecifications: { ...prev.technicalSpecifications, Pin: e.target.value },
                                             };
                                         });
                                     }}
                                 />
                                 <label htmlFor='image'>Các ảnh của sản phẩm</label>
+                                {typeof payload?.imageLinks[0] !== "symbol" && (
+                                    <div className='grid grid-rows-4 gap-4'>
+                                        {payload?.imageLinks?.map((current, idx) => {
+                                            if (typeof current === "string") return <Image key={idx} src={current}></Image>;
+                                        })}
+                                    </div>
+                                )}
+
                                 <input
                                     type='file'
                                     name='image'
@@ -239,8 +323,9 @@ export default function EditItemModal() {
                                     onChange={(e) => {
                                         const temp = [];
                                         for (let i = 0; i < e.target.files.length; i++) {
-                                            temp.push(e.target.files[i].name);
+                                            temp.push(e.target.files[i]);
                                         }
+
                                         setPayload((prev) => {
                                             return {
                                                 ...prev,
@@ -249,7 +334,9 @@ export default function EditItemModal() {
                                         });
                                     }}
                                 />
+
                                 <label htmlFor='thumb'>Ảnh đại diện:</label>
+                                <Image src={thumbSrc}></Image>
                                 <input
                                     type='file'
                                     name='thumb'
@@ -258,7 +345,7 @@ export default function EditItemModal() {
                                         setPayload((prev) => {
                                             return {
                                                 ...prev,
-                                                thumb: e.target.files[0].name,
+                                                thumb: e.target.files[0],
                                             };
                                         });
                                     }}
@@ -268,8 +355,8 @@ export default function EditItemModal() {
                                 <Button color='danger' variant='flat' onPress={onClose}>
                                     Đóng
                                 </Button>
-                                <Button color='primary' onPress={onClose}>
-                                    Thêm
+                                <Button color='primary' onPress={handleSubmit}>
+                                    Cập nhật thông tin điện thoại
                                 </Button>
                             </ModalFooter>
                         </>

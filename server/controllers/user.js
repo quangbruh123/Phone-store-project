@@ -1,6 +1,6 @@
-const CustomAPIError = require('../error/customError');
-const User = require('../models/user');
-const asyncHandler = require('express-async-handler');
+const CustomAPIError = require("../error/customError");
+const User = require("../models/user");
+const asyncHandler = require("express-async-handler");
 
 const getAllUser = asyncHandler(async (req, res) => {
   const queryObject = {};
@@ -9,9 +9,9 @@ const getAllUser = asyncHandler(async (req, res) => {
 
   // tìm các trường đơn giản cụ thể như là tìm tên, tìm hãng
   if (name) {
-    queryObject['$or'] = [
-      { name: { $regex: name, $options: 'i' } },
-      { email: { $regex: email, $options: 'i' } },
+    queryObject["$or"] = [
+      { name: { $regex: name, $options: "i" } },
+      { email: { $regex: email, $options: "i" } },
     ];
   }
 
@@ -19,7 +19,7 @@ const getAllUser = asyncHandler(async (req, res) => {
 
   // field limit (chọn trường để hiển thị)
   if (field) {
-    const fieldSelect = field.split(',').join(' ');
+    const fieldSelect = field.split(",").join(" ");
     result = result.select(fieldSelect);
   }
 
@@ -36,7 +36,7 @@ const getAllUser = asyncHandler(async (req, res) => {
 const getOneUser = asyncHandler(async (req, res) => {
   const { uid } = req.params;
 
-  const user = await User.findById(uid).select('-password');
+  const user = await User.findById(uid).select("-password");
 
   if (!user) {
     throw new NotFoundError(`No user with id ${uid}`);
@@ -59,12 +59,12 @@ const deleteUser = asyncHandler(async (req, res) => {
 const updateUserByAdmin = asyncHandler(async (req, res) => {
   const { uid } = req.params;
   if (Object.keys(req.body) === 0 || !uid) {
-    throw new CustomAPIError('Missing update info or user id', 400);
+    throw new CustomAPIError("Missing update info or user id", 400);
   }
   const updatedUser = await User.findByIdAndUpdate(uid, req.body, {
     runValidators: true,
     new: true,
-  }).select('-password');
+  }).select("-password");
 
   if (!updatedUser) {
     throw new CustomAPIError(`No user with id: ${id}`, 400);
@@ -77,15 +77,15 @@ const updateUser = asyncHandler(async (req, res) => {
   const { _id } = req.user;
 
   if (!_id) {
-    throw new CustomAPIError('Missing user id', 400);
+    throw new CustomAPIError("Missing user id", 400);
   }
   if (Object.keys(req.body) === 0) {
-    throw new CustomAPIError('Missing inputs', 400);
+    throw new CustomAPIError("Missing inputs", 400);
   }
   const updatedUser = await User.findByIdAndUpdate(_id, req.body, {
     runValidators: true,
     new: true,
-  }).select('-password -role -refreshToken');
+  }).select("-password -role -refreshToken");
 
   if (!updatedUser) {
     throw new CustomAPIError(`No user with id: ${id}`, 400);
@@ -101,12 +101,11 @@ const getCurrentUser = asyncHandler(async (req, res) => {
   const { _id } = req.user;
 
   if (!_id) {
-    throw new CustomAPIError('Missing user id', 400);
+    throw new CustomAPIError("Missing user id", 400);
   }
   const currentUser = await User.findById(_id)
-    .select('-password -role -refreshToken')
-    .populate('cart.product', 'phoneName');
-  console.log(currentUser);
+    .select("-password -role -refreshToken")
+    .populate("cart.product", "phoneName");
   if (!currentUser) {
     throw new CustomAPIError(`No user with id: ${id}`, 400);
   }
@@ -119,10 +118,10 @@ const updateCart = asyncHandler(async (req, res) => {
   const { pid, quantity = 1, phoneStorage, price, thumb } = req.body;
 
   if (!pid) {
-    throw new CustomAPIError('Missing phone id', 400);
+    throw new CustomAPIError("Missing phone id", 400);
   }
 
-  const user = await User.findById(_id).select('cart');
+  const user = await User.findById(_id).select("cart");
   const alreadyHave = user.cart.find((el) => el.product.toString() === pid);
 
   let updateCart;
@@ -134,8 +133,8 @@ const updateCart = asyncHandler(async (req, res) => {
       },
       {
         $set: {
-          'cart.$.quantity': quantity,
-          'cart.$.phoneStorage': phoneStorage,
+          "cart.$.quantity": quantity,
+          "cart.$.phoneStorage": phoneStorage,
         },
       },
       { new: true, runValidators: true }
@@ -157,7 +156,7 @@ const removeProductInCart = asyncHandler(async (req, res) => {
   const { pid } = req.body;
 
   if (!pid) {
-    throw new CustomAPIError('Missing phone id', 400);
+    throw new CustomAPIError("Missing phone id", 400);
   }
   await User.findByIdAndUpdate(
     _id,
