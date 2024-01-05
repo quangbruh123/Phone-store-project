@@ -80,12 +80,10 @@ const updateStatus = asyncHandler(async (req, res) => {
 
 const getUserOrder = asyncHandler(async (req, res) => {
 	const { _id } = req.user;
+	const { status } = req.query;
+	const order = await Order.find({ orderBy: _id, status });
 
-	const order = await Order.find({ orderBy: _id });
-
-	return res.status(200).json({
-		order,
-	});
+	return res.status(200).json(order);
 });
 
 const getAllOrder = asyncHandler(async (req, res) => {
