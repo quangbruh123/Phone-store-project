@@ -3,6 +3,7 @@ const User = require("../models/user");
 const Coupon = require("../models/coupon");
 const asyncHandler = require("express-async-handler");
 const CustomAPIError = require("../error/customError");
+const sendEmail = require("../utils/sendEmail");
 
 const createOrder = asyncHandler(async (req, res) => {
 	const { _id } = req.user;
@@ -45,18 +46,36 @@ const updateStatus = asyncHandler(async (req, res) => {
 	const { status, oid } = req.body;
 
 	const updated = await Order.findByIdAndUpdate(oid, { status, dateProceeded: Date.now() }, { new: true })
-		.populate("orderBy", "name")
+		.populate("orderBy", "name email")
 		.populate("products.productId", "phoneName price");
 
 	if (!updated) {
 		throw new CustomAPIError("No order with that id", 400);
 	}
 
-	if (updated.status === "Accepted") {
-		console.log(updated.products);
-	}
+	const mailContent = {
+		subject: "Thông báo tình trạng đặt hàng",
+		html: `<h2>Xác Nhận Đơn Đặt Hàng</h2>
+        <p>Kính gửi quý khách ${updated.orderBy.name},</p>
+        <p>Cảm ơn quý khách đã đặt hàng từ chúng tôi. Chúng tôi xin thông báo rằng đơn đặt hàng của quý khách đã được xác nhận thành công.</p>
+        <p><strong>Chi Tiết Đơn Hàng:</strong></p>
+        <ul>
+            <li><strong>Mã Đơn Hàng:</strong> ${updated._id}</li>
+            <li><strong>Sản Phẩm:</strong> ${updated.products
+				.reduce((prev, cur) => {
+					return prev + `${cur.productId.phoneName} (SL: ${cur.quantity}, ${cur.phoneStorage}), `;
+				}, "")
+				.slice(0, -1)}</li>
+            <li><strong>Tổng Giá Tiền:</strong> ${updated.total}</li>
+        </ul>
+        <p>Đơn đặt hàng của quý khách sẽ được xử lý sớm, và quý khách sẽ nhận được xác nhận khi hàng được gửi đi.</p>
+        <p>Cảm ơn quý khách đã lựa chọn dịch vụ của chúng tôi!</p>
+        <p>Trân trọng,<br> [Tên Công Ty Của Bạn]</p>`,
+	};
 
-	return res.status(204).send();
+	const rs = await sendEmail(mailContent, updated.orderBy.email);
+
+	return res.status(rs ? 204 : 500).send();
 });
 
 const getUserOrder = asyncHandler(async (req, res) => {
@@ -72,7 +91,6 @@ const getUserOrder = asyncHandler(async (req, res) => {
 const getAllOrder = asyncHandler(async (req, res) => {
 	const { status = "Pending" } = req.query;
 	const orders = await Order.find({ status }).populate("coupon").populate("orderBy", "name");
-
 	return res.status(200).json(orders);
 });
 

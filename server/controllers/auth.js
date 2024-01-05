@@ -77,7 +77,7 @@ const renewAccessToken = asyncHandler(async (req, res) => {
 });
 
 const forgotPassword = asyncHandler(async (req, res) => {
-	const { email } = req.query;
+	const { email } = req.body;
 	if (!email) {
 		throw new CustomAPIError("Missing Email", 400);
 	}
@@ -96,12 +96,9 @@ const forgotPassword = asyncHandler(async (req, res) => {
 ${process.env.CLIENT_URL}/resetPassword?email=${email}&resetToken=${resetToken}>Nhấn vào đây</a>`,
 	};
 
-	const rs = await sendEmail(email, mailContent, email);
+	const rs = await sendEmail(mailContent, email);
 
-	return res.status(200).json({
-		success: true,
-		rs,
-	});
+	return res.status(rs ? 200 : 500).send();
 });
 
 const checkResetToken = asyncHandler(async (req, res) => {
