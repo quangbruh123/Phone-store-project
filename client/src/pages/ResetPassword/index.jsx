@@ -45,6 +45,9 @@ const ResetPassword = () => {
             if (data.status && data.status == 200) {
                 console.log(data);
                 setValidatingSuccessful(true);
+                setInterval(() => {
+                    nav("/login");
+                }, 2500);
             } else {
                 window.alert(data.response.data.msg);
                 setValidatingSuccessful(false);
@@ -128,7 +131,7 @@ const ResetPassword = () => {
                                             ? !validatingFailed
                                                 ? "Đang xử lý..."
                                                 : "Lỗi!"
-                                            : "Thành công! Hãy kiểm tra hộp thư của bạn"
+                                            : "Thành công! Bạn sẽ được chuyển sang trang đăng nhập trong 2 giây."
                                         : "Khôi phục mật khẩu"}
                                 </button>
 
