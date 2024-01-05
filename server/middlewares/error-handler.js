@@ -22,7 +22,7 @@ const errorHandler = async (err, req, res, next) => {
 			}
 		}
 	}
-
+	console.log(err);
 	return res.status(customError.statusCode).json(customError);
 };
 

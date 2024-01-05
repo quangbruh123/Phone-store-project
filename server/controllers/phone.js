@@ -53,11 +53,14 @@ const updatePhone = asyncHandler(async (req, res) => {
 		}
 	}
 
+	if (req.body.phoneName) {
+		req.body.slug = createSlug(req.body.phoneName);
+	}
+
 	const updatedPhone = await Phone.findByIdAndUpdate(
 		pid,
 		{
 			...req.body,
-			slug: createSlug(req.body.phoneName),
 			thumb: thumb.path,
 			imageLinks: imageLinks.map((el) => el.path),
 		},

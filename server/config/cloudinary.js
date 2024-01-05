@@ -11,6 +11,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
 	cloudinary: cloudinary,
 	allowedFormats: ["jpg", "png"],
+	format: async (req, file) => "png",
 	params: {
 		folder: (req, file) => "phone_store",
 	},
