@@ -158,7 +158,7 @@ const ProductListing = () => {
                         setNextPage={() => handleChangePage(1)}
                     ></Pagination>
                     <button
-                        className={` fixed bottom-10 bg-gray-800 right-2 p-2 rounded-full text-xl shadow-2xl transition-all delay-100 ease-in-out ${
+                        className={`fixed bottom-10 bg-gray-800 right-2 p-2 rounded-full text-xl shadow-2xl transition-all delay-100 ease-in-out z-[999] ${
                             showScrollArrow ? "block" : "hidden"
                         }`}
                         onClick={scrollToTop}

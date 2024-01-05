@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ReactStars from "react-rating-stars-component";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import parser from "html-react-parser";
 
 import { addCartItems, getCartItems, getQuantity } from "../../store/cartReducer";
 import { addFavoriteItem, getFavoriteItem, getCount } from "../../store/favoriteReducer";
@@ -195,7 +196,7 @@ const ProductDetails = () => {
                             {productInfo?.avgRating}
                         </div> */}
                     </div>
-                    <div className='text-justify mb-5'>{productInfo?.description}</div>
+                    <div className='text-justify mb-5'>{parser(`${productInfo?.description}`)}</div>
                     <div className='flex gap-3 items-center mb-5'>
                         <PhoneStorageSelect phoneStorage={phoneStorage} onChange={handleChangeCartPhoneStorage}></PhoneStorageSelect>
                     </div>

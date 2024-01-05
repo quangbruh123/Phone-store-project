@@ -2,6 +2,7 @@ import Cart from "../pages/Cart/Cart";
 import Wishlist from "../pages/Wistlist/Wishlist";
 import Profile from "../pages/Profile/Profile";
 import AdminPage from "../pages/AdminPage";
+import Orders from "../pages/Order/Orders";
 import UserOrderList from "../pages/UserOrderList";
 const privateRoutes = [
     {
@@ -18,7 +19,7 @@ const privateRoutes = [
     // },
     {
         path: "/orders",
-        //   element: <Orders />,
+        element: <Orders />,
     },
     {
         path: "/profile",

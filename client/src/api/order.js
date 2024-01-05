@@ -26,3 +26,19 @@ export const updateOrderState = async (id, value) => {
         return error;
     }
 };
+
+export const createOrder = async (payload) => {
+    try {
+        const response = await axiosInstance({
+            method: "post",
+            url: "/order/",
+            withCredentials: true,
+            data: {
+                couponId: payload,
+            },
+        });
+        return response;
+    } catch (error) {
+        return error;
+    }
+};

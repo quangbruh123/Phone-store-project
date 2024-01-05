@@ -7,7 +7,7 @@ const PriceCard = ({ product }) => {
                 {product.phoneName} {product.phoneStorage} ({product.quantity})
             </p>
 
-            <p className='text-lg'>{(product.quantity * product.price * 1).toLocaleString("vi-VN")}</p>
+            <p className='text-lg'>{(product.quantity * product.price * 1).toLocaleString("vi-VN")}₫</p>
         </div>
     );
 };
