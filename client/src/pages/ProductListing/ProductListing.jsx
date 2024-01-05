@@ -34,14 +34,6 @@ const ProductListing = () => {
 
     const { data, isLoading, error } = useFetchDataForObject("/phone/filter", query);
 
-    // const { loading } = useProductsContext();
-    // const productsList = useFilter();
-    // useEffect(() => {
-    //     if (location?.state?.from === "category") {
-    //         setIsFilterOpen(true);
-    //     }
-    // }, []);
-
     const scrollToTop = () => {
         window.scrollTo({
             top: 0,
@@ -78,6 +70,41 @@ const ProductListing = () => {
         });
     }, [page]);
 
+    const handleFilterChange = (name, value) => {
+        setQuery((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    const handleChangeSort = (e) => {
+        if (e.target.value == "low_to_high") {
+            setQuery((prev) => ({
+                ...prev,
+                sort: `price`,
+            }));
+        } else if (e.target.value == "high_to_low") {
+            setQuery((prev) => ({
+                ...prev,
+                sort: `-price`,
+            }));
+        } else {
+            setQuery((prev) => ({
+                ...prev,
+                sort: ``,
+            }));
+        }
+    };
+
+    const handleClearQuery = () => {
+        setQuery({
+            phoneName: "",
+            brand: "",
+            sort: "",
+            limit: 12,
+        });
+    };
+
     return (
         <>
             {isLoading ? (
@@ -96,8 +123,13 @@ const ProductListing = () => {
                             Danh sách sản phẩm
                         </h1>
                         <div className='flex items-center gap-2'>
-                            <Filters isFilterOpen={isFilterOpen} setIsFilterOpen={setIsFilterOpen} />
-                            <SortBy />
+                            <Filters
+                                isFilterOpen={isFilterOpen}
+                                setIsFilterOpen={setIsFilterOpen}
+                                onChangeQuery={handleFilterChange}
+                                clear={handleClearQuery}
+                            />
+                            <SortBy onChangeSort={handleChangeSort} />
                             <button
                                 className={`flex py-1 px-2 rounded-md shadow-md items-center  gap-1 hover:bg-[--primary-text-color] hover:text-white hover:shadow-lg ${
                                     isFilterOpen ? "bg-[--primary-text-color] text-white" : ""
