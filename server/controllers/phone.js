@@ -83,6 +83,15 @@ const deletePhone = asyncHandler(async (req, res) => {
 
 	const deletedProduct = await Phone.findByIdAndDelete(pid);
 
+	if (deletedProduct.value.imageLinks.length > 0) {
+		for (const imageLink of deletedProduct.value.imageLinks) {
+			await deleteCloudinaryImage(imageLink);
+		}
+	}
+
+	if (deletedProduct.value.thumb) {
+		await deleteCloudinaryImage(deletedProduct.value.thumb);
+	}
 	if (!deletedProduct) {
 		throw new CustomAPIError("No product with that pid to delete", 400);
 	}
