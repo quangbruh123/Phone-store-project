@@ -22,8 +22,12 @@ const sendEmail = async (subject, order) => {
         <p><strong>Chi Tiết Đơn Hàng:</strong></p>
         <ul>
             <li><strong>Mã Đơn Hàng:</strong> ${order._id}</li>
-            <li><strong>Sản Phẩm:</strong> fdasfdsaf</li>
-            <li><strong>Tổng Giá Tiền:</strong> ${order.price}</li>
+            <li><strong>Sản Phẩm:</strong> ${order.products
+				.reduce((prev, cur) => {
+					return prev + `${cur.productId.phoneName} (SL: ${cur.quantity}, ${cur.phoneStorage}), `;
+				}, "")
+				.slice(0, -1)}</li>
+            <li><strong>Tổng Giá Tiền:</strong> ${order.total}</li>
         </ul>
         <p>Đơn đặt hàng của quý khách sẽ được xử lý sớm, và quý khách sẽ nhận được xác nhận khi hàng được gửi đi.</p>
         <p>Cảm ơn quý khách đã lựa chọn dịch vụ của chúng tôi!</p>

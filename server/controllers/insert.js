@@ -16,8 +16,8 @@ const insertPhones = asyncHandler(async (req, res) => {
 					// Nếu có, loại bỏ ký tự ':' ở cuối
 					const newKey = key.slice(0, -1);
 					// Tạo một cặp khóa mới và xóa cặp khóa cũ
-					technicalSpecifications[newKey] = technicalSpecifications[key];
-					delete technicalSpecifications[key];
+					phone.technicalSpecifications[newKey] = phone.technicalSpecifications[key];
+					delete phone.technicalSpecifications[key];
 				}
 			}
 			await Phone.create({
@@ -47,7 +47,7 @@ const insertAccount = asyncHandler(async (req, res) => {
 });
 
 const insertOrder = asyncHandler(async (req, res) => {
-	const allProduct = await Phone.find().skip(0).limit(20);
+	const allProduct = await Phone.find().skip(45).limit(2);
 
 	const products = allProduct.map((el) => {
 		return {
@@ -61,11 +61,11 @@ const insertOrder = asyncHandler(async (req, res) => {
 		totalCost += allProduct[i].price * products[i].quantity;
 	}
 
-	const orders = Array.from({ length: 20 }, () => ({
+	const orders = Array.from({ length: 3 }, () => ({
 		products,
-		status: "Processing",
+		status: ["Rejected", "Pending", "Accepted"][Math.floor(Math.random() * 3) + 1],
 		total: totalCost,
-		orderBy: "659576a1b22426eef1d528fd", // Replace with the actual user ID
+		orderBy: "659576a1b22426eef1d528fb", // Replace with the actual user ID
 	}));
 
 	await Order.insertMany(orders);
@@ -78,5 +78,10 @@ const change = asyncHandler(async (req, res) => {
 	return res.status(204).json(orders);
 });
 
-const insertBrand = asyncHandler(async (req, res) => {});
+const insertBrand = asyncHandler(async (req, res) => {
+	for (const brand of brandJson) {
+		await Brand.create({ name: brand });
+	}
+	return res.status(204).send();
+});
 module.exports = { insertPhones, insertAccount, insertOrder, change, insertBrand };
