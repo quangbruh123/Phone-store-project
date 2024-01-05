@@ -1,19 +1,16 @@
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input } from "@nextui-org/react";
 import { Editor } from "@tinymce/tinymce-react";
 import { PlusIcon } from "./PlusIcon.jsx";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { createPhone } from "../../../api/item.js";
 
 export default function AddItemModal() {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const editorRef = useRef(null);
-    // const [imageLinksInput, setImageLinkInput] = useState([]);
+
     const [payload, setPayload] = useState({});
     const handleSubmit = () => {
         const formData = new FormData();
-        // // for (let i = 0; i < imageLinksInput.length; i++) {
-        // //     formData.append("imageLinks", imageLinksInput[i]);
-        // // }
 
         const finStorage = payload.storageString?.split(",");
 
@@ -40,16 +37,14 @@ export default function AddItemModal() {
                 }
             }
         }
-
-        console.log(formData);
-        createPhone(formData).then(() => {
-            console.log("create thanfh cong");
-        });
-        // console.log(payload);
+        for (const [key, value] of formData.entries()) {
+            console.log(key, ":", value);
+        }
+        // createPhone(formData).then(() => {
+        //     console.log("create thanfh cong");
+        // });
     };
-    useEffect(() => {
-        // console.log(payload);
-    }, [payload]);
+
     return (
         <>
             <Button onPress={onOpen} color='primary' endContent={<PlusIcon />}>

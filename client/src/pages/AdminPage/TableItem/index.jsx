@@ -84,7 +84,7 @@ export default function TableItem() {
                     <div className='relative flex items-center gap-2'>
                         <Tooltip content='Sửa' color='success'>
                             <span className='text-lg text-default-400 cursor-pointer active:opacity-50'>
-                                <EditItemModal />
+                                <EditItemModal phoneID={phone?._id} />
                             </span>
                         </Tooltip>
                         <Tooltip color='danger' content='Xóa'>
