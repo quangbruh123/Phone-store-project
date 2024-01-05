@@ -11,7 +11,6 @@ const createOrder = asyncHandler(async (req, res) => {
     .select("cart")
     .populate("cart.product", "phoneName price");
   const products = user.cart.map((obj) => {
-    console.log(obj);
     return {
       productId: obj.product._id.toString(),
       quantity: obj.quantity,
@@ -58,7 +57,6 @@ const updateStatus = asyncHandler(async (req, res) => {
   }
 
   if (updated.status === "Accepted") {
-    console.log(updated.products);
   }
 
   return res.status(204).send();
