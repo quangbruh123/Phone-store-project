@@ -6,6 +6,7 @@ import { authRoutes, contentRoutes } from "./publicRoute";
 import { privateRoutes } from "./privateRoute";
 import PrivateRoutes from "./PrivateRoutes";
 import Homepage from "../pages/Home/Home";
+import NotFoundPage from "../pages/NotFoundPage";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -17,6 +18,7 @@ export const router = createBrowserRouter(
                 ))}
             </Route>
             <Route element={<PublicLayout></PublicLayout>}>
+                <Route path='*' element={<NotFoundPage />}></Route>
                 <Route path='/' element={<Homepage></Homepage>} index />
                 {contentRoutes.map((route, idx) => (
                     <Route key={idx} path={route.path} element={route.element}></Route>
