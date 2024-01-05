@@ -3,6 +3,8 @@ import ProductDetails from "../pages/productDetails/ProductDetails";
 import Login from "../pages/Login/Login";
 import Signup from "../pages/Signup/Signup";
 import AdminPage from "../pages/AdminPage";
+import ResetPassword from "../pages/ResetPassword";
+import ForgotPassword from "../pages/ForgotPassword";
 const authRoutes = [
     {
         path: "/login",
@@ -12,6 +14,15 @@ const authRoutes = [
         path: "/signup",
         element: <Signup />,
     },
+    {
+        path: "/forgot-password",
+        element: <ForgotPassword />,
+    },
+    {
+        path: "/resetPassword",
+        element: <ResetPassword />,
+    },
+    // /resetPassword?email=thaiduong7v@gmail.com&resetToken=983033
 ];
 
 const contentRoutes = [

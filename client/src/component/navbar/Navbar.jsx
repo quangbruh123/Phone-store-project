@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { BsBookmarkHeart } from "react-icons/bs";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { MdOutlineExplore } from "react-icons/md";
-import { FaCaretDown, FaUser, FaHandPointRight } from "react-icons/fa";
+import { FaCaretDown, FaUser, FaHandPointRight, FaCashRegister } from "react-icons/fa";
 import { CiLogout } from "react-icons/ci";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -100,7 +100,13 @@ const Navbar = () => {
                                             <div>Chuyển sang trang quản lý</div>
                                         </div>
                                     )}
-
+                                    <div
+                                        className='flex cursor-pointer items-center gap-4 px-5 py-4 hover:bg-gray-300'
+                                        onClick={() => navigate("/user-order-list")}
+                                    >
+                                        <FaCashRegister></FaCashRegister>
+                                        <div>Thông tin các đơn hàng của bạn.</div>
+                                    </div>
                                     <div
                                         className='flex cursor-pointer items-center gap-4 px-5 py-4 font-semibold text-red-600 hover:bg-gray-300'
                                         onClick={() => {

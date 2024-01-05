@@ -52,7 +52,7 @@ const Signup = () => {
                 <section className='px-10 py-10 rounded-md shadow-md bg-white/[0.7] flex flex-col gap-6 w-full max-w-lg'>
                     <Logo />
                     <div className='flex flex-col gap-2 '>
-                        <h1 className='text-4xl font-bold mb-3'>Đăng ký tài khoản</h1>
+                        <h1 className='text-4xl font-bold mb-3 text-center'>Đăng ký tài khoản</h1>
 
                         <form action='' className='flex flex-col gap-4 py-5' onSubmit={handleSubmit}>
                             <label className='flex flex-col'>
@@ -157,13 +157,13 @@ const Signup = () => {
                                     {signingUp ? (!signUpSuccessful ? "Đang xử lý..." : "Đăng ký thành công") : "Tạo tài khoản"}
                                 </button>
                                 <p className='text-gray-600 text-sm'>
-                                    Already have an account?{" "}
+                                    Bạn đã có tài khoản?{" "}
                                     <Link
                                         to='/login'
                                         className='underline text-base
             '
                                     >
-                                        Login
+                                        Đăng nhập.
                                     </Link>
                                 </p>
                             </div>
