@@ -39,6 +39,7 @@ const updatePhone = asyncHandler(async (req, res) => {
 	const imageLinks = req.files.imageLinks;
 
 	const phone = await Phone.findById(pid);
+	console.log(req.files, imageLinks);
 	if (!phone) {
 		throw new CustomAPIError(`Không có sản phẩm với id ${req.params.pid}`, 400);
 	}
@@ -47,7 +48,7 @@ const updatePhone = asyncHandler(async (req, res) => {
 		await deleteCloudinaryImage(phone.thumb);
 	}
 
-	if (Array.isArray(imageLinks)) {
+	if (imageLinks && Array.isArray(imageLinks) && imageLinks.length > 0) {
 		for (const imageLink of phone.imageLinks) {
 			await deleteCloudinaryImage(imageLink);
 		}
@@ -61,8 +62,8 @@ const updatePhone = asyncHandler(async (req, res) => {
 		pid,
 		{
 			...req.body,
-			thumb: thumb.path,
-			imageLinks: imageLinks.map((el) => el.path),
+			thumb: thumb.path || "",
+			imageLinks: imageLinks?.map((el) => el.path) || [],
 		},
 		{
 			runValidators: true,
