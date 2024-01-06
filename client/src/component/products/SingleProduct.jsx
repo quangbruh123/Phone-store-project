@@ -11,7 +11,7 @@ import { getQuantity, addCartItems, getCartItems } from "../../store/cartReducer
 import { getCount, getFavoriteItem, addFavoriteItem } from "../../store/favoriteReducer";
 import StarRating from "./StarRating";
 
-const SingleProduct = ({ product }) => {
+const SingleProduct = ({ product, success }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
@@ -104,7 +104,9 @@ const SingleProduct = ({ product }) => {
                                 })
                             );
                             setInCartList(true);
-                            toast.success("Thêm vào giỏ hàng thành công");
+                            if (success) {
+                                success();
+                            }
                         } else {
                             navigate("/cart");
                         }

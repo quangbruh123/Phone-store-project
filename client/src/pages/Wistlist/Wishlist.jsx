@@ -8,15 +8,18 @@ import { getFavoriteItem, getCount } from "../../store/favoriteReducer";
 const Wishlist = () => {
     const favoriteItems = useSelector(getFavoriteItem);
 
+    const successAddCartItem = () => {
+        toast.success("Thêm vào giỏ hàng thành công");
+    };
+
     return (
         <div>
             {favoriteItems.length ? (
                 <>
-                    {" "}
                     <h1 className='text-2xl py-6 font-semibold text-gray-800'>Danh sách yêu thích</h1>
                     <main className='grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4'>
                         {favoriteItems.map((item, idx) => (
-                            <SingleProduct product={item} />
+                            <SingleProduct product={item} success={successAddCartItem} />
                         ))}
                     </main>
                 </>
