@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { TableHeader, Tab, TableColumn, Table, Tabs, TableBody, TableRow, TableCell, Tooltip } from "@nextui-org/react";
-// import admin from '@/Api_Call/admin';
 import { AcceptIcon } from "../../assets/AcceptIcon";
 import { DeleteIcon } from "../../assets/DeleteIcon";
 import { getOrder, updateOrderState } from "../../api/order";
@@ -11,7 +10,6 @@ export default function OrderList() {
 
     const handleState = (state, id) => {
         if (id) {
-            console.log(id);
             updateOrderState(id, state)
                 .then(() => {
                     getOrder("Pending")

@@ -4,13 +4,11 @@ import { Link, useNavigate } from "react-router-dom";
 
 import bannerHero from "../../assets/bannerHero.jpg";
 
-import { forgotPassword, resetPassword } from "../../api/auth";
+import { resetPassword } from "../../api/auth";
 import { Logo } from "../../component";
 import { useEffect, useState } from "react";
 
 const ResetPassword = () => {
-    const [email, setEmail] = useState("");
-
     const [validating, setValidating] = useState(false);
 
     const [validatingSuccessful, setValidatingSuccessful] = useState(false);
@@ -54,7 +52,7 @@ const ResetPassword = () => {
                 setValidatingFailed(true);
                 setInterval(() => {
                     setValidatingFailed(false);
-                    setEmail("");
+
                     setValidating(false);
                 }, 2500);
             }

@@ -42,3 +42,18 @@ export const createOrder = async (payload) => {
         return error;
     }
 };
+export const userOrdersForUser = async (status) => {
+    try {
+        const response = await axiosInstance({
+            method: "get",
+            url: "/order",
+            params: {
+                status: status,
+            },
+            withCredentials: true,
+        });
+        return response;
+    } catch (error) {
+        return error;
+    }
+};
