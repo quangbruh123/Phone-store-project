@@ -24,16 +24,24 @@ const Login = () => {
 
     const [loginSuccessful, setLoginSuccesful] = useState(false);
 
+    const [isBlocked, setIsBlocked] = useState(false);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoggingIn(true);
         const response = await login(loginCredentials);
 
         if (response.status === 200) {
-            dispatch(setAccessToken(response.data.accessToken));
-            dispatch(setUser(response.data.userData));
-            setLoginSuccesful(true);
-            setTimeout(() => navigate("/"), 1000);
+            console.log(response.data.userData.isBlocked);
+            if (response.data.userData.isBlocked) {
+                setIsBlocked(true);
+                setTimeout(() => navigate("/"), 3000);
+            } else {
+                dispatch(setAccessToken(response.data.accessToken));
+                dispatch(setUser(response.data.userData));
+                setLoginSuccesful(true);
+                setTimeout(() => navigate("/"), 1000);
+            }
         } else {
             window.alert(response.response?.data?.msg || response.response?.data.message);
 
@@ -98,7 +106,13 @@ const Login = () => {
                                 >
                                     {loginSuccessful && <AiOutlineCheck className='mt-1'></AiOutlineCheck>}
                                     <div className='flex items-center justify-center'>
-                                        {loggingIn ? (!loginSuccessful ? "Đang đăng nhập..." : "Đăng nhập thành công") : "Đăng nhập"}
+                                        {loggingIn
+                                            ? !loginSuccessful
+                                                ? isBlocked
+                                                    ? "Bạn đã bị mất quyền truy cập. Vui lòng liên hệ quản lý cửa hàng."
+                                                    : "Đang đăng nhập..."
+                                                : "Đăng nhập thành công"
+                                            : "Đăng nhập"}
                                     </div>
                                 </button>
 
