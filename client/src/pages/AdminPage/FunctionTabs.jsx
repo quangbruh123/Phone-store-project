@@ -1,5 +1,4 @@
 import { Tabs, Tab } from "@nextui-org/react";
-
 import UserItem from "./UserItem";
 import OrderList from "./OrderList";
 import TableItem from "./TableItem";

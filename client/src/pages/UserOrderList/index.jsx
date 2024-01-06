@@ -1,4 +1,3 @@
-// import user from "@/Api_Call/user";
 import { Tab, Tabs, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/react";
 
 import { useState } from "react";

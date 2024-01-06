@@ -22,7 +22,6 @@ const authRoutes = [
         path: "/resetPassword",
         element: <ResetPassword />,
     },
-    // /resetPassword?email=thaiduong7v@gmail.com&resetToken=983033
 ];
 
 const contentRoutes = [
