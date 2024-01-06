@@ -112,7 +112,11 @@ const CartTotalCard = ({ cart }) => {
                 <button
                     className='btn-rounded-primary rounded-full flex items-center gap-2 md:text-sm lg:text-base'
                     onClick={() => {
-                        setShowModal(true);
+                        if (!payMethod[0].isSelect && !payMethod[1].isSelect) {
+                            window.alert("Chưa chọn phương thức thanh toán.");
+                        } else {
+                            setShowModal(true);
+                        }
                     }}
                 >
                     Tiếp tục thanh toán
