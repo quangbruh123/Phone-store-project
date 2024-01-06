@@ -21,6 +21,10 @@ const login = asyncHandler(async (req, res) => {
 		throw new CustomAPIError(`Password is not correct`, 400);
 	}
 
+	if (user.isBlocked) {
+		throw new CustomAPIError("Người dùng đã bị block, không thể đăng nhập", 404);
+	}
+
 	const accessToken = user.createJWT(process.env.ACCESS_TOKEN_LT);
 	const refreshToken = user.createJWT(process.env.REFRESH_TOKEN_LT);
 
